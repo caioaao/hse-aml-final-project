@@ -11,3 +11,7 @@ Datasets are presumed to be available in `.data` directory under the project roo
 ```sh
 kaggle competitions download -c competitive-data-science-predict-future-sales -p .data
 ```
+
+## Solution
+
+The solution was written in several jupyter notebooks. Each notebook is prefixed with a number: the order in which they should be read. To view all, run `jupyter lab` under `<project-root>/notebooks`.
