@@ -1,8 +1,8 @@
 import os
 
-DATASETS_DIR='../.data'
-TRIALS_DIR=os.path.join(DATASETS_DIR, 'trials')
-SUBMISSIONS_DIR=os.path.join(DATASETS_DIR, 'submissions')
-REGRESSORS_DIR=os.path.join(DATASETS_DIR, 'regressors')
+DATA_DIR='../.data'
 
-N_TEST_SPLITS=3
+RAW_DATA_DIR = os.path.join(DATA_DIR, '01-raw')
+PROCESSED_DATA_DIR = os.path.join(DATA_DIR, '02-processed')
+MODELS_DIR = os.path.join(DATA_DIR, '03-models')
+MODEL_OUTPUTS_DIR = os.path.join(DATA_DIR, '04-model-output')

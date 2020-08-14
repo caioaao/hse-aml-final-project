@@ -16,6 +16,7 @@ kaggle = "*"
 jupyterlab = "*"
 altair = "*"
 xgboost = "*"
+pyarrow = "*"
 
 [dev-packages]
 
