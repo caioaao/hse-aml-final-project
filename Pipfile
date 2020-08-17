@@ -17,6 +17,7 @@ jupyterlab = "*"
 altair = "*"
 xgboost = "*"
 pyarrow = "*"
+ipywidgets = "*"
 
 [dev-packages]
 
