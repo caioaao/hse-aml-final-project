@@ -1,7 +1,9 @@
-import pandas as pd
+import numpy as np
 
 
-def split(df: pd.DataFrame):
-    return [[df.index[df['date_block_num'] < k],
-             df.index[df['date_block_num'] == k]]
-            for k in [31, 32, 33]]
+def split(X, n=3, date_col=0, window=None):
+    dates = X[:, date_col]
+    return [(np.where((dates >= (0 if not window else k - window - 1))
+                      & (dates < k))[0],
+             np.where(dates == k)[0])
+            for k in range(33 - n + 1, 34)]
