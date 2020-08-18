@@ -4,14 +4,14 @@
 
 This submission makes use of [pipenv](https://pipenv-fork.readthedocs.io/en/latest/), so to install the dependencies, just run `pipenv install` inside the project directory. After that, run `pipenv shell` and you should be all set.
 
-## Datasets
+We also use [GNU Make](https://www.gnu.org/software/make/) to process the data and generate the final solution.
 
-Datasets are presumed to be available in `.data` directory under the project root. Use kaggle CLI to set it up (also present under `pipenv shell`):
+Also make sure the kaggle CLI is configured as it is used to fetch the datasets.
 
-```sh
-kaggle competitions download -c competitive-data-science-predict-future-sales -p .data
-```
+## Documentation
+
+The whole process is documented using jupyter notebooks inside [./notebooks](./notebooks). Each notebook is prefixed with a number: the order in which they should be read. To view all, run `jupyter lab` under `<project-root>/notebooks`. The title also contains the analysis step I was in when I wrote the notebook (EDA, feature engineering, hyperparameter tuning).
 
 ## Solution
 
-The solution was written in several jupyter notebooks. Each notebook is prefixed with a number: the order in which they should be read. To view all, run `jupyter lab` under `<project-root>/notebooks`.
+After experimenting with the notebooks, I wrote the scripts inside [./src](./src). Then the dependency graph is declared using the [Makefile](./Makefile). After setting up the environment, all you need to do is run `make final-solution` and it will download the datasets, process them, train the models and output the submission.

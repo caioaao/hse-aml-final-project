@@ -19,7 +19,14 @@ xgboost = "*"
 pyarrow = "*"
 ipywidgets = "*"
 
-[dev-packages]
-
 [requires]
 python_version = "3.8"
+
+[dev-packages]
+
+[packages.python-language-server]
+extras = [ "all",]
+
+[packages.e1839a8]
+path = "."
+editable = true
