@@ -36,8 +36,8 @@ def _save_result(output_path, df):
 
 if __name__ == '__main__':
     import sys
-    output_path = sys.argv[1]
-    raw_data_path = sys.argv[2]
+    raw_data_path = sys.argv[1]
+    output_path = sys.argv[2]
     comp(partial(_save_result, output_path),
          _clip_count,
          _group_by_month,
