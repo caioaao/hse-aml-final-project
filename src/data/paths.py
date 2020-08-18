@@ -6,11 +6,11 @@ def data_dir():
 
 
 def raw_data_dir():
-    return os.path.join(data_dir(), '01-raw')
+    return os.path.join(data_dir(), 'raw')
 
 
 def processed_data_dir():
-    return os.path.join(data_dir(), '02-processed')
+    return os.path.join(data_dir(), 'processed')
 
 
 def models_dir():
