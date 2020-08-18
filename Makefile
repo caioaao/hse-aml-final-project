@@ -24,9 +24,15 @@
 .data/02-processed/shop-item-cat-encoding.parquet: .data/02-processed/train-set-base.parquet .data/02-processed/item-categories-metadata.parquet .data/02-processed/shop-sales-train-by-month.parquet | .data/02-processed
 	pipenv run python -m src.data.make_shop_item_cat_encoding $^ $@
 
+.data/02-processed/date-ids.parquet: .data/02-processed/train-set-base.parquet | .data/02-processed
+	pipenv run python -m src.data.make_date_ids $^ $@
+
+.data/02-processed/base-ids-monthly-freqs.parquet: .data/02-processed/train-set-base.parquet .data/02-processed/item-categories-metadata.parquet | .data/02-processed
+	pipenv run python -m src.data.make_base_ids_monthly_freqs $^ $@
+
 .PHONY: clean
 clean:
 	rm -rf .data
 
 fetch-raw: .data/01-raw/competitive-data-science-predict-future-sales.zip
-process-data: .data/02-processed/train-set-base.parquet .data/02-processed/test-set-base.parquet .data/02-processed/item-categories-metadata.parquet .data/02-processed/shop-sales-train-by-month.parquet .data/02-processed/shop-item-cat-encoding.parquet
+process-data: .data/02-processed/train-set-base.parquet .data/02-processed/test-set-base.parquet .data/02-processed/item-categories-metadata.parquet .data/02-processed/shop-sales-train-by-month.parquet .data/02-processed/shop-item-cat-encoding.parquet .data/02-processed/date-ids.parquet .data/02-processed/base-ids-monthly-freqs.parquet
