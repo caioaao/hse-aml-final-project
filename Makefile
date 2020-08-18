@@ -39,9 +39,22 @@
 .data/02-processed/test-set-base-cats.parquet: .data/02-processed/test-set-base.parquet | .data/02-processed
 	pipenv run python -m src.feature_engineering.add_base_cat_features $< $@
 
+.data/02-processed/train-set-base-cats-item-cnt-lagged.parquet: .data/02-processed/train-set-base-cats.parquet .data/02-processed/item-cnt-lagged.parquet | .data/02-processed
+	pipenv run python -m src.feature_engineering.add_item_cnt_lagged $^ $@
+
+.data/02-processed/test-set-base-cats-item-cnt-lagged.parquet: .data/02-processed/test-set-base-cats.parquet .data/02-processed/item-cnt-lagged.parquet | .data/02-processed
+	pipenv run python -m src.feature_engineering.add_item_cnt_lagged $^ $@
+
+.data/02-processed/train-set-base-cats-item-cnt-lagged-date-ids.parquet: .data/02-processed/train-set-base-cats-item-cnt-lagged.parquet .data/02-processed/date-ids.parquet | .data/02-processed
+	pipenv run python -m src.feature_engineering.add_date_ids $^ $@
+
+.data/02-processed/test-set-base-cats-item-cnt-lagged-date-ids.parquet: .data/02-processed/test-set-base-cats-item-cnt-lagged.parquet .data/02-processed/date-ids.parquet | .data/02-processed
+	pipenv run python -m src.feature_engineering.add_date_ids $^ $@
+
+
 .PHONY: clean
 clean:
 	rm -rf .data
 
 fetch-raw: .data/01-raw/competitive-data-science-predict-future-sales.zip
-process-data: .data/02-processed/train-set-base.parquet .data/02-processed/test-set-base.parquet .data/02-processed/item-categories-metadata.parquet .data/02-processed/shop-sales-train-by-month.parquet .data/02-processed/shop-item-cat-encoding.parquet .data/02-processed/date-ids.parquet .data/02-processed/base-ids-monthly-freqs.parquet .data/02-processed/item-cnt-lagged.parquet .data/02-processed/train-set-base-cats.parquet .data/02-processed/test-set-base-cats.parquet
+process-data: .data/02-processed/train-set-base.parquet .data/02-processed/test-set-base.parquet .data/02-processed/item-categories-metadata.parquet .data/02-processed/shop-sales-train-by-month.parquet .data/02-processed/shop-item-cat-encoding.parquet .data/02-processed/date-ids.parquet .data/02-processed/base-ids-monthly-freqs.parquet .data/02-processed/item-cnt-lagged.parquet .data/02-processed/train-set-base-cats.parquet .data/02-processed/test-set-base-cats.parquet .data/02-processed/train-set-base-cats-item-cnt-lagged.parquet .data/02-processed/test-set-base-cats-item-cnt-lagged.parquet .data/02-processed/train-set-base-cats-item-cnt-lagged-date-ids.parquet .data/02-processed/test-set-base-cats-item-cnt-lagged-date-ids.parquet
