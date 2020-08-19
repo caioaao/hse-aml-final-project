@@ -51,6 +51,8 @@
 .data/processed/test-set-base-cats-item-cnt-lagged-date-ids.parquet: src/feature_engineering/add_date_ids.py .data/processed/test-set-base-cats-item-cnt-lagged.parquet .data/processed/date-ids.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
+ipynb-02: notebooks/02-eda.ipynb .data/processed/sales-train-by-month.parquet .data/processed/train-set.parquet
+	pipenv run scripts/rerun_nb.sh $<
 
 .PHONY: clean
 clean:
