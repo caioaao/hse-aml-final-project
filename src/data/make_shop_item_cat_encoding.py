@@ -3,15 +3,15 @@ import numpy as np
 
 if __name__ == '__main__':
     import sys
-    train_set = pd.read_parquet(sys.argv[1])
+    sales_train = pd.read_parquet(sys.argv[1])
     item_categories_metadata = pd.read_parquet(sys.argv[2])
     shop_sales_train_by_month = pd.read_parquet(sys.argv[3])
     output_path = sys.argv[4]
 
-    train_set_with_categories_metadata = train_set.merge(
+    sales_train_with_categories_metadata = sales_train.merge(
         item_categories_metadata, on='item_id')
 
-    shop_item_cat_encoding = train_set_with_categories_metadata\
+    shop_item_cat_encoding = sales_train_with_categories_metadata\
         .pivot_table(index=['shop_id', 'date_block_num'],
                      columns='category_name',
                      aggfunc=np.sum, fill_value=0,

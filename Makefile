@@ -21,10 +21,10 @@
 .data/processed/item-categories-metadata.parquet: .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
 	pipenv run python -m src.data.make_item_categories_metadata $< $@
 
-.data/processed/shop-sales-train-by-month.parquet: .data/processed/train-set-base.parquet | .data/processed
+.data/processed/shop-sales-train-by-month.parquet: .data/processed/sales-train-by-month.parquet | .data/processed
 	pipenv run python -m src.data.make_shop_sales_train_by_month $< $@
 
-.data/processed/shop-item-cat-encoding.parquet: .data/processed/train-set-base.parquet .data/processed/item-categories-metadata.parquet .data/processed/shop-sales-train-by-month.parquet | .data/processed
+.data/processed/shop-item-cat-encoding.parquet: .data/processed/sales-train-by-month.parquet .data/processed/item-categories-metadata.parquet .data/processed/shop-sales-train-by-month.parquet | .data/processed
 	pipenv run python -m src.data.make_shop_item_cat_encoding $^ $@
 
 .data/processed/date-ids.parquet: .data/processed/train-set-base.parquet | .data/processed
