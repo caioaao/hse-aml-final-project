@@ -33,9 +33,6 @@
 .data/processed/base-ids-monthly-freqs.parquet: .data/processed/sales-train-by-month.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run python -m src.data.make_base_ids_monthly_freqs $^ $@
 
-.data/processed/item-cnt-lagged.parquet: .data/processed/train-set-base.parquet .data/processed/test-set-base.parquet | .data/processed
-	pipenv run python -m src.data.make_item_cnt_lagged $^ $@
-
 .data/processed/train-set-base-cats.parquet: .data/processed/train-set-base.parquet | .data/processed
 	pipenv run python -m src.feature_engineering.add_base_cat_features $< $@
 
