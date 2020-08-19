@@ -27,10 +27,10 @@
 .data/processed/shop-item-cat-encoding.parquet: .data/processed/sales-train-by-month.parquet .data/processed/item-categories-metadata.parquet .data/processed/shop-sales-train-by-month.parquet | .data/processed
 	pipenv run python -m src.data.make_shop_item_cat_encoding $^ $@
 
-.data/processed/date-ids.parquet: .data/processed/train-set-base.parquet | .data/processed
+.data/processed/date-ids.parquet: .data/processed/sales-train-by-month.parquet | .data/processed
 	pipenv run python -m src.data.make_date_ids $^ $@
 
-.data/processed/base-ids-monthly-freqs.parquet: .data/processed/train-set-base.parquet .data/processed/item-categories-metadata.parquet | .data/processed
+.data/processed/base-ids-monthly-freqs.parquet: .data/processed/sales-train-by-month.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run python -m src.data.make_base_ids_monthly_freqs $^ $@
 
 .data/processed/item-cnt-lagged.parquet: .data/processed/train-set-base.parquet .data/processed/test-set-base.parquet | .data/processed
