@@ -15,6 +15,9 @@
 .data/processed/test-subset.parquet: .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
 	pipenv run python -m src.data.make_test_subset $^ $@
 
+.data/processed/test-ids.parquet: .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
+	pipenv run python -m src.data.make_test_ids $^ $@
+
 .data/processed/item-categories-metadata.parquet: .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
 	pipenv run python -m src.data.make_item_categories_metadata $< $@
 
