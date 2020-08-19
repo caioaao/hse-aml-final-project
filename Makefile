@@ -58,6 +58,3 @@
 .PHONY: clean
 clean:
 	rm -rf .data
-
-fetch-raw: .data/raw/competitive-data-science-predict-future-sales.zip
-process-data: .data/processed/train-set-base.parquet .data/processed/test-set-base.parquet .data/processed/item-categories-metadata.parquet .data/processed/shop-sales-train-by-month.parquet .data/processed/shop-item-cat-encoding.parquet .data/processed/date-ids.parquet .data/processed/base-ids-monthly-freqs.parquet .data/processed/item-cnt-lagged.parquet .data/processed/train-set-base-cats.parquet .data/processed/test-set-base-cats.parquet .data/processed/train-set-base-cats-item-cnt-lagged.parquet .data/processed/test-set-base-cats-item-cnt-lagged.parquet .data/processed/train-set-base-cats-item-cnt-lagged-date-ids.parquet .data/processed/test-set-base-cats-item-cnt-lagged-date-ids.parquet

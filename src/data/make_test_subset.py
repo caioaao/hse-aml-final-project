@@ -18,4 +18,4 @@ if __name__ == '__main__':
         .drop_duplicates()
     test_set = test_set.merge(ids_from_train, on=['item_id', 'shop_id'])
     test_set['date_block_num'] = sales_train['date_block_num'].max() + 1
-    test_set['item_id', 'shop_id', 'date_block_num'].to_parquet(output_path)
+    test_set[['item_id', 'shop_id', 'date_block_num']].to_parquet(output_path)
