@@ -9,11 +9,11 @@
 .data/processed/sales-train-by-month.parquet: .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
 	pipenv run python -m src.data.make_sales_train_by_month $< $@
 
-.data/processed/test-set-base.parquet: .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
-	pipenv run python -m src.data.preprocess_test_set $< $@
+.data/processed/train-set.parquet: .data/processed/sales-train-by-month.parquet | .data/processed
+	pipenv run python -m src.data.make_train_set $^ $@
 
-.data/processed/train-set-base.parquet: .data/processed/sales-train-by-month.parquet | .data/processed
-	pipenv run python -m src.data.preprocess_train_set $< $@
+.data/processed/test-subset.parquet: .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
+	pipenv run python -m src.data.make_test_subset $^ $@
 
 .data/processed/item-categories-metadata.parquet: .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
 	pipenv run python -m src.data.make_item_categories_metadata $< $@
