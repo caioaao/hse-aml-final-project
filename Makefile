@@ -33,24 +33,6 @@
 .data/processed/base-ids-monthly-freqs.parquet: src/data/make_base_ids_monthly_freqs.py .data/processed/sales-train-by-month.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/train-set-base-cats.parquet: src/feature_engineering/add_base_cat_features.py .data/processed/train-set-base.parquet | .data/processed
-	pipenv run scripts/runpy.sh $^ $@
-
-.data/processed/test-set-base-cats.parquet: src/feature_engineering/add_base_cat_features.py .data/processed/test-set-base.parquet | .data/processed
-	pipenv run scripts/runpy.sh $^ $@
-
-.data/processed/train-set-base-cats-item-cnt-lagged.parquet: src/feature_engineering/add_item_cnt_lagged.py .data/processed/train-set-base-cats.parquet .data/processed/item-cnt-lagged.parquet | .data/processed
-	pipenv run scripts/runpy.sh $^ $@
-
-.data/processed/test-set-base-cats-item-cnt-lagged.parquet: src/feature_engineering/add_item_cnt_lagged.py .data/processed/test-set-base-cats.parquet .data/processed/item-cnt-lagged.parquet | .data/processed
-	pipenv run scripts/runpy.sh $^ $@
-
-.data/processed/train-set-base-cats-item-cnt-lagged-date-ids.parquet: src/feature_engineering/add_date_ids.py .data/processed/train-set-base-cats-item-cnt-lagged.parquet .data/processed/date-ids.parquet | .data/processed
-	pipenv run scripts/runpy.sh $^ $@
-
-.data/processed/test-set-base-cats-item-cnt-lagged-date-ids.parquet: src/feature_engineering/add_date_ids.py .data/processed/test-set-base-cats-item-cnt-lagged.parquet .data/processed/date-ids.parquet | .data/processed
-	pipenv run scripts/runpy.sh $^ $@
-
 .PHONY: clean
 clean:
 	rm -rf .data
