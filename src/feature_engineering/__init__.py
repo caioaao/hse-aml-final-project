@@ -1,7 +1,7 @@
 from tqdm.auto import trange
 
-
 FEATURE_PREFIX = 'f__'
+CAT_FEATURE_PREFIX = '%scat__' % FEATURE_PREFIX
 
 
 def add_lagged_features(
@@ -23,3 +23,22 @@ def drop_non_features(df, inplace=False):
     return df.drop(columns=[c for c in df.columns
                             if not c.startswith(FEATURE_PREFIX)],
                    inplace=inplace)
+
+
+def add_as_features(df, cols, inplace=False, feature_type='numerical'):
+    if not inplace:
+        df = df.copy()
+
+    if feature_type == 'numeric':
+        pref = FEATURE_PREFIX
+    elif feature_type == 'categorical':
+        pref = CAT_FEATURE_PREFIX
+
+    df[["%s%s" % (pref, col) for col in cols]] = df[cols]
+
+    return df
+
+
+def add_as_cat_features(df, cols, inplace=False):
+    return add_as_features(df, cols, inplace=inplace,
+                           feature_type='categorical')
