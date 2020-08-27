@@ -63,7 +63,7 @@ def train(params, X_train, y_train):
     return xgb.train({**DEFAULT_PARAMS, **params}, dtrain)
 
 
-def best_num_round(params, X, y, cv_splits):
+def best_num_round(params, X, y, cv_splits, verbose=True):
     params = {**DEFAULT_PARAMS, **params}
     train_idx, test_idx = cv_splits[-1]
     dtrain = xgb.DMatrix(X[train_idx], y[train_idx])
@@ -71,7 +71,7 @@ def best_num_round(params, X, y, cv_splits):
     bst = xgb.train(params, dtrain, early_stopping_rounds=50,
                     num_boost_round=1000, evals=[(dtrain, 'dtrain'),
                                                  (dtest, 'dtest')],
-                    feval=_xgb_feval)
+                    feval=_xgb_feval, verbose_eval=verbose)
     return bst.best_ntree_limit
 
 
