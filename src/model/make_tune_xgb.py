@@ -27,7 +27,7 @@ if __name__ == '__main__':
     trials_db = 'sqlite:///%s' % trials_db_path
     study = optuna.create_study(direction='minimize', load_if_exists=True,
                                 study_name=train_set_path, storage=trials_db)
-    study.optimize(objective, n_trials=100, n_jobs=4, gc_after_trial=True)
+    study.optimize(objective, n_trials=50, n_jobs=4, gc_after_trial=True)
 
     best_ntree_limit = best_num_round(study.best_params, X_train, y_train,
                                       cv_splits)
