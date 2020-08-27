@@ -1,5 +1,8 @@
-.data/raw .data/processed .run-nb:
+.data/raw .data/processed .data/model:
 	mkdir -p $@
+
+.data/trials.db:
+	touch $@
 
 .data/raw/competitive-data-science-predict-future-sales.zip: | .data/raw
 	pipenv run kaggle competitions download \
@@ -34,6 +37,9 @@
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/processed/%-features-001.parquet: src/feature_engineering/make_dataset_001.py .data/processed/%.parquet .data/processed/sales-train-by-month.parquet .data/processed/date-ids.parquet | .data/processed
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/model/xgb-features-001.model: src/model/make_tune_xgb.py .data/trials.db .data/processed/train-set-features-001.parquet | .data/model
 	pipenv run scripts/runpy.sh $^ $@
 
 .PHONY: clean

@@ -42,3 +42,7 @@ def add_as_features(df, cols, inplace=False, feature_type='numerical'):
 def add_as_cat_features(df, cols, inplace=False):
     return add_as_features(df, cols, inplace=inplace,
                            feature_type='categorical')
+
+
+def df_to_X_y(df):
+    return drop_non_features(df).values, df['item_cnt_month'].values

@@ -18,6 +18,7 @@ altair = "*"
 xgboost = "*"
 pyarrow = "*"
 ipywidgets = "*"
+optuna = "*"
 
 [requires]
 python_version = "3.8"
