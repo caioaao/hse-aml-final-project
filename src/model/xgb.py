@@ -1,31 +1,29 @@
 import xgboost as xgb
+from xgboost import XGBRegressor
 from src.model.metrics import corrected_rmse
 from optuna import Trial
+
+
+DEFAULT_PARAMS = {"objective": "reg:squarederror",
+                  "n_jobs": -1,
+                  "base_score": 0.5,
+                  "scale_pos_weight": 1}
 
 
 def _xgb_feval(y_pred, dtrain):
     return 'cRMSE', corrected_rmse(dtrain.get_label(), y_pred)
 
 
-STATIC_LEARNING_PARAMS = {
-    'feval': _xgb_feval,
-    'maximize': False,
-    'early_stopping_rounds': 10,
-    'num_boost_round': 1000}
-
-
 def make_xgb_loss(X_train, y_train, cv_splits, verbose=True):
     dtrain = xgb.DMatrix(X_train, y_train)
     return lambda params: xgb.cv(
         params, dtrain, folds=cv_splits, verbose_eval=verbose,
-        **STATIC_LEARNING_PARAMS)['test-cRMSE-mean'].min()
+        feval=_xgb_feval, maximize=False, early_stopping_rounds=10,
+        num_boost_round=1000)['test-cRMSE-mean'].min()
 
 
 def trial_to_params(trial: Trial):
-    return {"objective": "reg:squarederror",
-            "n_jobs": -1,
-            "base_score": 0.5,
-            "scale_pos_weight": 1,
+    return {**DEFAULT_PARAMS,
             "max_depth": trial.suggest_int('max_depth', 2, 20, 1),
             "subsample": trial.suggest_discrete_uniform('subsample',
                                                         .20, 1.00, .01),
@@ -63,4 +61,20 @@ def make_xgb_objective(xgb_loss):
 
 def train(params, X_train, y_train):
     dtrain = xgb.DMatrix(X_train, y_train)
-    return xgb.train(params, dtrain, **STATIC_LEARNING_PARAMS)
+    return xgb.train({**DEFAULT_PARAMS, **params}, dtrain)
+
+
+def best_num_round(params, X, y, cv_splits):
+    params = {**DEFAULT_PARAMS, **params}
+    train_idx, test_idx = cv_splits[-1]
+    dtrain = xgb.DMatrix(X[train_idx], y[train_idx])
+    dtest = xgb.DMatrix(X[test_idx], y[test_idx])
+    bst = xgb.train(params, dtrain, early_stopping_rounds=50,
+                    num_boost_round=1000, evals=[(dtrain, 'dtrain'),
+                                                 (dtest, 'dtest')],
+                    feval=_xgb_feval)
+    return bst.best_ntree_limit
+
+
+def sklearn_regressor(params, num_round):
+    return XGBRegressor(n_estimators=num_round, **DEFAULT_PARAMS, **params)

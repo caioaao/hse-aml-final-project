@@ -2,7 +2,9 @@ import joblib
 
 import pandas as pd
 import optuna
-from .xgb import make_xgb_loss, make_xgb_objective, train
+
+from .xgb import (make_xgb_loss, make_xgb_objective, best_num_round,
+                  sklearn_regressor)
 from . import tscv
 from ..feature_engineering import df_to_X_y
 
@@ -27,5 +29,11 @@ if __name__ == '__main__':
                                 study_name=train_set_path, storage=trials_db)
     study.optimize(objective, n_trials=100, n_jobs=4, gc_after_trial=True)
 
-    bst = train(study.best_params, X_train, y_train)
-    bst.save_model(output_path)
+    best_ntree_limit = best_num_round(study.best_params, X_train, y_train,
+                                      cv_splits)
+
+    reg = sklearn_regressor(study.best_params, best_ntree_limit)
+
+    reg.fit(X_train, y_train)
+
+    joblib.dump(reg, output_path)
