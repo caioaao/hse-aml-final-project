@@ -18,8 +18,7 @@ def make_xgb_loss(X_train, y_train, cv_splits, verbose=True):
     dtrain = xgb.DMatrix(X_train, y_train)
     return lambda params: xgb.cv(
         params, dtrain, folds=cv_splits, verbose_eval=verbose,
-        feval=_xgb_feval, maximize=False, early_stopping_rounds=10,
-        num_boost_round=1000)['test-cRMSE-mean'].min()
+        feval=_xgb_feval, maximize=False)['test-cRMSE-mean'].min()
 
 
 def trial_to_params(trial: Trial):
