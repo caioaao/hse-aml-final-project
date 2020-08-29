@@ -12,13 +12,10 @@
 .data/processed/sales-train-by-month.parquet: src/data/make_sales_train_by_month.py .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/train-set.parquet: src/data/make_train_set.py .data/processed/sales-train-by-month.parquet | .data/processed
+.data/processed/test-set.parquet: src/data/make_test_set.py .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/test-subset.parquet: src/data/make_test_subset.py .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
-	pipenv run scripts/runpy.sh $^ $@
-
-.data/processed/test-ids.parquet: src/data/make_test_ids.py .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
+.data/processed/train-set.parquet: src/data/make_train_set.py .data/processed/test-set.parquet .data/processed/sales-train-by-month.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/processed/item-categories-metadata.parquet: src/data/make_item_categories_metadata.py .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
@@ -39,10 +36,13 @@
 .data/processed/%-features-001.parquet: src/feature_engineering/make_dataset_001.py .data/processed/%.parquet .data/processed/sales-train-by-month.parquet .data/processed/date-ids.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/model/xgb-features-001.model: src/model/make_tune_xgb.py .data/trials/studies.db .data/processed/train-set-features-001.parquet | .data/model
+.data/processed/%-features-002.parquet: src/feature_engineering/make_dataset_002.py .data/processed/%-features-001.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/submissions/xgb-features-001.csv: src/submission/make_submission.py .data/model/xgb-features-001.model .data/processed/test-ids.parquet .data/processed/test-subset-features-001.parquet | .data/submissions
+.data/model/xgb-features-%.model: src/model/make_tune_xgb.py .data/trials/studies.db .data/processed/train-set-features-%.parquet | .data/model
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/submissions/xgb-features-%.csv: src/submission/make_submission.py .data/model/xgb-features-%.model .data/processed/test-set-features-%.parquet | .data/submissions
 	pipenv run scripts/runpy.sh $^ $@
 
 .PHONY: clean

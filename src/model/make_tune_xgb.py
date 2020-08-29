@@ -25,8 +25,10 @@ if __name__ == '__main__':
     objective = make_xgb_objective(make_xgb_loss(X_train, y_train, cv_splits))
 
     trials_db = 'sqlite:///%s' % trials_db_path
-    study = optuna.create_study(direction='minimize', load_if_exists=True,
-                                study_name=train_set_path, storage=trials_db)
+    study = optuna.create_study(
+        direction='minimize', load_if_exists=True, study_name=train_set_path,
+        storage=trials_db, sampler=optuna.samplers.RandomSampler(seed=8338),
+        pruner=optuna.pruners.HyperbandPruner())
 
     try:
         study.optimize(objective, n_trials=50, n_jobs=4, gc_after_trial=True)

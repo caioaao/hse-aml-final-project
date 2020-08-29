@@ -1,8 +1,8 @@
 import numpy as np
 import xgboost as xgb
 from xgboost import XGBRegressor
-from src.model.metrics import corrected_rmse
 from optuna import Trial
+from sklearn.metrics import mean_squared_error
 
 
 DEFAULT_PARAMS = {"objective": "reg:squarederror",
@@ -10,8 +10,9 @@ DEFAULT_PARAMS = {"objective": "reg:squarederror",
 
 
 def _xgb_feval(y_pred, dtrain):
-    return 'cRMSE', corrected_rmse(dtrain.get_label(),
-                                   np.clip(y_pred, 0, 20))
+    return 'cRMSE', mean_squared_error(
+        dtrain.get_label(), np.clip(y_pred, 0, 20),
+        squared=False)
 
 
 def make_xgb_loss(X_train, y_train, cv_splits, verbose=True):
