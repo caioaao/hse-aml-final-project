@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     train_set = pd.read_parquet(train_set_path)
     X_train, y_train = df_to_X_y(train_set)
-    cv_splits = tscv.split(train_set['date_block_num'].values)
+    cv_splits = tscv.split(train_set['date_block_num'].values, n=1)
 
     objective = make_xgb_objective(make_xgb_loss(X_train, y_train, cv_splits))
 
@@ -38,6 +38,7 @@ if __name__ == '__main__':
 
     reg = sklearn_regressor(study.best_params, best_ntree_limit)
 
-    reg.fit(X_train, y_train)
+    reg = reg.fit(X_train, y_train)
 
+    print(reg)
     joblib.dump(reg, output_path)

@@ -1,7 +1,7 @@
-.data/raw .data/processed .data/model:
+.data/raw .data/processed .data/model .data/submissions .data/trials:
 	mkdir -p $@
 
-.data/trials.db:
+.data/trials/studies.db: | .data/trials
 	touch $@
 
 .data/raw/competitive-data-science-predict-future-sales.zip: | .data/raw
@@ -39,7 +39,10 @@
 .data/processed/%-features-001.parquet: src/feature_engineering/make_dataset_001.py .data/processed/%.parquet .data/processed/sales-train-by-month.parquet .data/processed/date-ids.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/model/xgb-features-001.model: src/model/make_tune_xgb.py .data/trials.db .data/processed/train-set-features-001.parquet | .data/model
+.data/model/xgb-features-001.model: src/model/make_tune_xgb.py .data/trials/studies.db .data/processed/train-set-features-001.parquet | .data/model
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/submissions/xgb-features-001.csv: src/submission/make_submission.py .data/model/xgb-features-001.model .data/processed/test-ids.parquet .data/processed/test-subset-features-001.parquet | .data/submissions
 	pipenv run scripts/runpy.sh $^ $@
 
 .PHONY: clean
