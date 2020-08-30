@@ -22,11 +22,22 @@ def make_xgb_loss(X_train, y_train, cv_splits, verbose=True):
 
 
 def trial_to_params(trial: Trial):
-    return {**DEFAULT_PARAMS,
-            "booster": trial.suggest_categorical(
-                "booster", ['gbtree', 'gblinear']),
-            "objective": trial.suggest_categorical(
-                "objective", ["reg:squarederror", "reg:gamma"]),
+    params = {**DEFAULT_PARAMS,
+              "booster": trial.suggest_categorical(
+                  "booster", ['gbtree', 'gblinear'])
+              "objective": trial.suggest_categorical(
+                  "objective", ["reg:squarederror", "reg:gamma"]),
+              "seed": trial.suggest_int('seed', 0, 999999),
+              "learning_rate": trial.suggest_loguniform(
+                  'learning_rate', 0.005, 0.5),
+              "reg_alpha": trial.suggest_categorical(
+                  "reg_alpha", [0, 0, 0, 0, 0, 0.00000001,
+                                0.00000005, 0.0000005, 0.000005]),
+              "reg_lambda": trial.suggest_categorical(
+                  "reg_lambda", [1, 1, 1, 1, 2, 3, 4, 5, 1])}
+
+    if params['booster'] == 'gbtree':
+        params.update({
             "max_depth": trial.suggest_int('max_depth', 2, 30, 1),
             "subsample": trial.suggest_discrete_uniform('subsample',
                                                         .2, 1, .05),
@@ -36,9 +47,6 @@ def trial_to_params(trial: Trial):
                 'colsample_bylevel', .20, 1., .01),
             "colsample_bynode": trial.suggest_discrete_uniform(
                 'colsample_bynode', .20, 1., .01),
-            "seed": trial.suggest_int('seed', 0, 999999),
-            "learning_rate": trial.suggest_loguniform(
-                'learning_rate', 0.005, 0.5),
             "gamma": trial.suggest_categorical("gamma", [0, 0, 0, 0, 0, 0.01,
                                                          0.1, 0.2, 0.3, 0.5,
                                                          1., 10., 100.]),
@@ -49,15 +57,9 @@ def trial_to_params(trial: Trial):
                                                            100, 1, 1, 1]),
             "max_delta_step": trial.suggest_categorical("max_delta_step",
                                                         [0, 0, 0, 0, 0,
-                                                         1, 2, 5, 8]),
-            "reg_alpha": trial.suggest_categorical("reg_alpha", [0, 0, 0, 0, 0,
-                                                                 0.00000001,
-                                                                 0.00000005,
-                                                                 0.0000005,
-                                                                 0.000005]),
-            "reg_lambda": trial.suggest_categorical("reg_lambda", [1, 1, 1, 1,
-                                                                   2, 3, 4, 5,
-                                                                   1])}
+                                                         1, 2, 5, 8])})
+
+    return params
 
 
 def make_xgb_objective(xgb_loss):
