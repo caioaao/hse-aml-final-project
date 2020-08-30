@@ -10,11 +10,12 @@ DEFAULT_PARAMS = {"n_jobs": -1}
 
 def _xgb_feval(y_pred, dtrain):
     try:
-        return 'cRMSE', mean_squared_error(
+        result = mean_squared_error(
             dtrain.get_label(), np.clip(y_pred, 0, 20),
             squared=False)
     except ValueError:
-        return np.nan
+        result = np.nan
+    return 'clipped-rmse', result
 
 
 def make_xgb_loss(X_train, y_train, cv_splits, verbose=True):
@@ -23,7 +24,7 @@ def make_xgb_loss(X_train, y_train, cv_splits, verbose=True):
         params, dtrain, folds=cv_splits, verbose_eval=verbose,
         feval=_xgb_feval, maximize=False, num_boost_round=1000,
         early_stopping_rounds=10
-    )['test-cRMSE-mean'].min()
+    )['test-clipped-rmse-mean'].min()
 
 
 def trial_to_params(trial: Trial):
