@@ -24,7 +24,7 @@ def make_xgb_loss(X_train, y_train, cv_splits, verbose=True):
 def trial_to_params(trial: Trial):
     params = {**DEFAULT_PARAMS,
               "booster": trial.suggest_categorical(
-                  "booster", ['gbtree', 'gblinear'])
+                  "booster", ['gbtree', 'gblinear']),
               "objective": trial.suggest_categorical(
                   "objective", ["reg:squarederror", "reg:gamma"]),
               "seed": trial.suggest_int('seed', 0, 999999),
