@@ -5,8 +5,7 @@ from optuna import Trial
 from sklearn.metrics import mean_squared_error
 
 
-DEFAULT_PARAMS = {"objective": "reg:squarederror",
-                  "n_jobs": -1}
+DEFAULT_PARAMS = {"n_jobs": -1}
 
 
 def _xgb_feval(y_pred, dtrain):
@@ -24,16 +23,22 @@ def make_xgb_loss(X_train, y_train, cv_splits, verbose=True):
 
 def trial_to_params(trial: Trial):
     return {**DEFAULT_PARAMS,
-            "max_depth": trial.suggest_int('max_depth', 2, 20, 1),
+            "booster": trial.suggest_categorical(
+                "booster", ['gbtree', 'gblinear']),
+            "objective": trial.suggest_categorical(
+                "objective", ["reg:squarederror", "reg:gamma"]),
+            "max_depth": trial.suggest_int('max_depth', 2, 30, 1),
             "subsample": trial.suggest_discrete_uniform('subsample',
-                                                        .20, 1.00, .01),
+                                                        .2, 1, .05),
             "colsample_bytree": trial.suggest_discrete_uniform(
                 'colsample_bytree', .20, 1., .01),
             "colsample_bylevel": trial.suggest_discrete_uniform(
                 'colsample_bylevel', .20, 1., .01),
+            "colsample_bynode": trial.suggest_discrete_uniform(
+                'colsample_bynode', .20, 1., .01),
             "seed": trial.suggest_int('seed', 0, 999999),
-            "learning_rate": trial.suggest_uniform(
-                'learning_rate', 0.01, 0.15),
+            "learning_rate": trial.suggest_loguniform(
+                'learning_rate', 0.005, 0.5),
             "gamma": trial.suggest_categorical("gamma", [0, 0, 0, 0, 0, 0.01,
                                                          0.1, 0.2, 0.3, 0.5,
                                                          1., 10., 100.]),

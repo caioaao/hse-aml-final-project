@@ -39,6 +39,9 @@
 .data/processed/%-features-002.parquet: src/feature_engineering/make_dataset_002.py .data/processed/%-features-001.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
+.data/processed/%-features-003.parquet: src/feature_engineering/make_dataset_003.py .data/processed/%-features-002.parquet .data/processed/shop-item-cat-encoding.parquet | .data/processed
+	pipenv run scripts/runpy.sh $^ $@
+
 .data/model/xgb-features-%.model: src/model/make_tune_xgb.py .data/trials/studies.db .data/processed/train-set-features-%.parquet | .data/model
 	pipenv run scripts/runpy.sh $^ $@
 
