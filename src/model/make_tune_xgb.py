@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     trials_db = 'sqlite:///%s' % trials_db_path
     study = optuna.create_study(
-        direction='minimize', load_if_exists=True, study_name=train_set_path,
+        direction='minimize', load_if_exists=True, study_name=output_path,
         storage=trials_db, sampler=optuna.samplers.RandomSampler(seed=8338),
         pruner=optuna.pruners.HyperbandPruner())
 
