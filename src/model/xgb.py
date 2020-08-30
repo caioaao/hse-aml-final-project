@@ -9,16 +9,21 @@ DEFAULT_PARAMS = {"n_jobs": -1}
 
 
 def _xgb_feval(y_pred, dtrain):
-    return 'cRMSE', mean_squared_error(
-        dtrain.get_label(), np.clip(y_pred, 0, 20),
-        squared=False)
+    try:
+        return 'cRMSE', mean_squared_error(
+            dtrain.get_label(), np.clip(y_pred, 0, 20),
+            squared=False)
+    except ValueError:
+        return np.nan
 
 
 def make_xgb_loss(X_train, y_train, cv_splits, verbose=True):
     dtrain = xgb.DMatrix(X_train, y_train)
     return lambda params: xgb.cv(
         params, dtrain, folds=cv_splits, verbose_eval=verbose,
-        feval=_xgb_feval, maximize=False)['test-cRMSE-mean'].min()
+        feval=_xgb_feval, maximize=False, num_boost_round=1000,
+        early_stopping_rounds=10
+    )['test-cRMSE-mean'].min()
 
 
 def trial_to_params(trial: Trial):
