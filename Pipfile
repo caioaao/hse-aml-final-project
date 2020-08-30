@@ -19,6 +19,7 @@ xgboost = "*"
 pyarrow = "*"
 ipywidgets = "*"
 optuna = "*"
+lightgbm = "*"
 
 [requires]
 python_version = "3.8"
