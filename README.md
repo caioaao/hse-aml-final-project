@@ -18,7 +18,9 @@ After experimenting with the notebooks, I wrote the scripts inside [./src](./src
 
 ## Feature sets
 
-Eacho feature set builds on top of the last
+Each feature set builds on top of the last
 
-- features-001: lagged item counts, item ids, shop ids, date ids (date block, month id, and year id)
-- features-002: item categories metadata
+| ID | Description | Public LB Score |
+| -- | -- | -- |
+| 001 | lagged item counts, item ids, shop ids, date ids (date block, month id, and year id) | 1.03884 |
+| 002 | item categories metadata | 0.99800 |
