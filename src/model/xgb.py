@@ -63,8 +63,9 @@ def trial_to_params(trial: Trial):
                                                            100, 1, 1, 1]),
             "max_delta_step": trial.suggest_categorical("max_delta_step",
                                                         [0, 0, 0, 0, 0,
-                                                         1, 2, 5, 8])})
-
+                                                         1, 2, 5, 8]),
+            "tree_method": "gpu_hist",
+            "gpu_id": 0})
     return params
 
 

@@ -31,7 +31,7 @@ if __name__ == '__main__':
         pruner=optuna.pruners.HyperbandPruner())
 
     try:
-        study.optimize(objective, n_trials=50, n_jobs=4, gc_after_trial=True)
+        study.optimize(objective, n_trials=50, n_jobs=2, gc_after_trial=True)
     except KeyboardInterrupt:
         print("Canceling optimization step before it finishes")
 
