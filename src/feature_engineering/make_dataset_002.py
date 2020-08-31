@@ -16,12 +16,12 @@ if __name__ == '__main__':
     df = input_df.merge(cats_metadata, on='item_id')
 
     df['le_category_name'] = le_cat_name.transform(df['category_name'])
-    df['le_subcategory_name'] = le_subcat_name.transform(df['subcategory_name'])
+    df['le_subcategory_name'] = le_subcat_name.transform(
+        df['subcategory_name'])
 
     add_as_cat_features(df, ['le_category_name', 'le_subcategory_name'],
                         inplace=True)
-    df.drop(columns=['le_category_name', 'le_subcategory_name',
-                     'category_name', 'subcategory_name'],
+    df.drop(columns=['le_category_name', 'le_subcategory_name'],
             inplace=True)
 
     df.to_parquet(output_path)

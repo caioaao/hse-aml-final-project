@@ -1,4 +1,5 @@
 from tqdm.auto import trange
+import pandas as pd
 
 FEATURE_PREFIX = 'f__'
 CAT_FEATURE_PREFIX = '%scat__' % FEATURE_PREFIX
@@ -48,5 +49,38 @@ def add_as_cat_features(df, cols, inplace=False):
                            feature_type='categorical')
 
 
+def df_to_X(df):
+    return drop_non_features(df).values
+
+
 def df_to_X_y(df):
-    return drop_non_features(df).values, df['item_cnt_month'].values
+    return df_to_X(df), df['item_cnt_month'].values
+
+
+def mean_encoding_col_name(on, label='item_cnt_month'):
+    return 'mean_%s_on_%s' % (label, '_'.join(on))
+
+
+def mean_encoding_df(df, on, label='item_cnt_month'):
+    encode_column = mean_encoding_col_name(on, label)
+    return df[on + [label]].groupby(on)[label].mean().reset_index().rename(
+        columns={label: encode_column})
+
+
+def rolling_mean_encoding_col_name(on, label='item_cnt_month', w=20):
+    return 'rolling_window_%d_mean_%s_on_%s' % (w, label, '_'.join(on))
+
+
+def rolling_mean_encoding_df(df, on, label='item_cnt_month', w=20,
+                             date_col='date_block_num'):
+    encode_column = rolling_mean_encoding_col_name(on, label, w)
+
+    dfs = []
+    for m in trange(w, 34):
+        tmp_df = df.loc[
+            (df['date_block_num'] <= m) & (df['date_block_num'] > (m - w)),
+            on + [label]].groupby(on)[label].mean().reset_index().rename(
+            columns={label: encode_column})
+        tmp_df['date_block_num'] = m
+        dfs.append(tmp_df)
+    return pd.concat(dfs)
