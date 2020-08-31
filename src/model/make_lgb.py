@@ -44,4 +44,8 @@ if __name__ == '__main__':
     print('Params: %s' % str(model.params))
     print('Best iteration: %d' % model.best_iteration)
 
-    joblib.dump(model, output_path)
+    reg = lgb.LGBMRegressor(
+        n_estimators=model.best_iteration, **model.params)
+
+    reg = reg.fit(X, y)
+    joblib.dump(reg, output_path)
