@@ -95,13 +95,20 @@ def make_xgb_objective(xgb_loss):
                 trial, observation_key='test-clipped-rmse')])
 
 
+def _complete_params(params):
+    params = {**DEFAULT_PARAMS, **params}
+    if params['booster'] == 'gbtree':
+        params.update({"tree_method": "gpu_hist",
+                       "gpu_id": 0})
+    return params
+
 def train(params, X_train, y_train):
     dtrain = xgb.DMatrix(X_train, y_train)
-    return xgb.train({**DEFAULT_PARAMS, **params}, dtrain)
+    return xgb.train(_complete_params(params), dtrain)
 
 
 def best_num_round(params, X, y, cv_splits, verbose=True):
-    params = {**DEFAULT_PARAMS, **params}
+    params = _complete_params(params)
     train_idx, test_idx = cv_splits[-1]
     dtrain = xgb.DMatrix(X[train_idx], y[train_idx])
     dtest = xgb.DMatrix(X[test_idx], y[test_idx])
@@ -113,7 +120,7 @@ def best_num_round(params, X, y, cv_splits, verbose=True):
 
 
 def sklearn_regressor(params, num_round):
-    return XGBRegressor(n_estimators=num_round, **DEFAULT_PARAMS, **params)
+    return XGBRegressor(n_estimators=num_round, **_complete_params(params))
 
 
 if __name__ == '__main__':
