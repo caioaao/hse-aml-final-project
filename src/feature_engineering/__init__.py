@@ -57,23 +57,23 @@ def df_to_X_y(df):
     return df_to_X(df), df['item_cnt_month'].values
 
 
-def mean_encoding_col_name(on, label='item_cnt_month'):
+def _mean_encoding_col_name(on, label):
     return 'mean_%s_on_%s' % (label, '_'.join(on))
 
 
-def mean_encoding_df(df, on, label='item_cnt_month'):
-    encode_column = mean_encoding_col_name(on, label)
+def mean_encoding_df(df, on, label='item_cnt'):
+    encode_column = _mean_encoding_col_name(on, label)
     return df[on + [label]].groupby(on)[label].mean().reset_index().rename(
         columns={label: encode_column})
 
 
-def rolling_mean_encoding_col_name(on, label='item_cnt_month', w=20):
+def _rolling_mean_encoding_col_name(on, label, w):
     return 'rolling_window_%d_mean_%s_on_%s' % (w, label, '_'.join(on))
 
 
-def rolling_mean_encoding_df(df, on, label='item_cnt_month', w=20,
+def rolling_mean_encoding_df(df, on, label='item_cnt', w=20,
                              date_col='date_block_num'):
-    encode_column = rolling_mean_encoding_col_name(on, label, w)
+    encode_column = _rolling_mean_encoding_col_name(on, label, w)
 
     dfs = []
     for m in trange(w, 34):
