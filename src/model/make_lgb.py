@@ -2,6 +2,7 @@ import sys
 
 import pandas as pd
 import joblib
+import optuna
 import optuna.integration.lightgbm as optuna_lgb
 import lightgbm as lgb
 
@@ -17,9 +18,11 @@ DEFAULT_PARAMS = {
 }
 
 if __name__ == '__main__':
-    db_string = 'sqlite:///%s' % sys.argv[1]
+    trials_db_path = sys.argv[1]
     train_set = pd.read_parquet(sys.argv[2])
     output_path = sys.argv[3]
+
+    trials_db = 'sqlite:///%s' % trials_db_path
 
     X, y = df_to_X_y(train_set)
     X_train, y_train, X_val, y_val = train_test_split(
@@ -30,8 +33,13 @@ if __name__ == '__main__':
 
     params = {**DEFAULT_PARAMS}
 
+    study = optuna.create_study(
+        load_if_exists=True, study_name=output_path,
+        storage=trials_db)
+
     model = optuna_lgb.train(params, dtrain, valid_sets=[dtrain, dval],
-                             early_stopping_rounds=100, verbose_eval=10)
+                             early_stopping_rounds=100, verbose_eval=10,
+                             study=study)
 
     print('Params: %s' % str(model.params))
     print('Best iteration: %d' % model.best_iteration)
