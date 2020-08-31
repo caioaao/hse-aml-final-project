@@ -11,8 +11,8 @@ def split(date_vec, n=3, window=None, test_months=None):
             for k in test_months]
 
 
-def train_test_split(date_vec, train_start=0, train_end=32, test_start=None,
-                     test_end=None):
+def train_test_split_indexes(date_vec, train_start=0, train_end=32,
+                             test_start=None, test_end=None):
     assert (test_start is None) or (train_end < test_start)
     assert train_start <= train_end
     assert ((test_start is None)
@@ -24,3 +24,9 @@ def train_test_split(date_vec, train_start=0, train_end=32, test_start=None,
                                    else test_start)
                       & (date_vec <= test_end if test_end is not None
                          else 33)))[0])
+
+
+def train_test_split(*arrays, **options):
+    train_idx, test_idx = train_test_split_indexes(options.pop('date_vec'),
+                                                   **options)
+    return [xs[train_idx] for xs in arrays] + [xs[test_idx] for xs in arrays]

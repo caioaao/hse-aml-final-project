@@ -42,10 +42,16 @@
 .data/processed/%-features-003.parquet: src/feature_engineering/make_dataset_003.py .data/processed/%-features-002.parquet .data/processed/shop-item-cat-encoding.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/model/xgb-features-%.model: src/model/make_tune_xgb.py .data/trials/studies.db .data/processed/train-set-features-%.parquet | .data/model
+.data/model/xgb-features-%.model: src/model/make_xgb.py .data/trials/studies.db .data/processed/train-set-features-%.parquet | .data/model
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/model/lgb-features-%.model: src/model/make_lgb.py .data/trials/studies.db .data/processed/train-set-features-%.parquet | .data/model
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/submissions/xgb-features-%.csv: src/submission/make_submission.py .data/model/xgb-features-%.model .data/processed/test-set-features-%.parquet | .data/submissions
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/submissions/lgb-features-%.csv: src/submission/make_submission.py .data/model/lgb-features-%.model .data/processed/test-set-features-%.parquet | .data/submissions
 	pipenv run scripts/runpy.sh $^ $@
 
 .PHONY: clean
