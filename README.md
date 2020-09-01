@@ -20,10 +20,10 @@ After experimenting with the notebooks, I wrote the scripts inside [./src](./src
 
 Each feature set builds on top of the last
 
-| ID | Description | Public LB Score |
-| -- | -- | -- |
-| 001 | lagged item counts, item ids, shop ids, date ids (date block, month id, and year id) | 1.03884 |
-| 002 | item categories metadata | 0.99800 |
-| 003 | encoding for shops using previous month's item category mean sales | |
+| ID | Description | CV Score (XGB default params) | Public LB Score |
+| -- | -- | -- | -- |
+| 001 | lagged item counts, item ids, shop ids, date ids (date block, month id, and year id) | | 1.03884 |
+| 002 | item categories metadata | | 0.99800 |
+| 003 | encoding for shops using previous month's item category mean sales | | |
 
 ### Models

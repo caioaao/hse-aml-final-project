@@ -20,6 +20,8 @@ pyarrow = "*"
 ipywidgets = "*"
 optuna = "*"
 lightgbm = "*"
+forex-python = "*"
+yfinance = "*"
 
 [requires]
 python_version = "3.8"
