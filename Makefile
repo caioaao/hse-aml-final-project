@@ -33,6 +33,9 @@
 .data/processed/base-ids-monthly-freqs.parquet: src/data/make_base_ids_monthly_freqs.py .data/processed/sales-train-by-month.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
+.data/processed/macroeconomics-history.parquet: src/data/make_macroeconomics_history.py | .data/processed
+	pipenv run scripts/runpy.sh $^ $@
+
 .data/processed/%-features-001.parquet: src/feature_engineering/make_dataset_001.py .data/processed/%.parquet .data/processed/sales-train-by-month.parquet .data/processed/date-ids.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
