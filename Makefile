@@ -66,6 +66,12 @@
 .data/submissions/lgb-features-%.csv: src/submission/make_submission.py .data/model/lgb-features-%.model .data/processed/test-set-features-%.parquet | .data/submissions
 	pipenv run scripts/runpy.sh $^ $@
 
+.data/processed/cv-xgb-features-%.parquet: src/model/make_cv_predict.py .data/model/xgb-features-%.model .data/processed/train-set-features-%.parquet | .data/processed
+	pipenv run scripts/runpy.sh $^ $@
+
+reports/cv-score-%.log: src/model/make_cv_report.py .data/processed/cv-%.parquet | reports
+	pipenv run scripts/runpy.sh $^ $@
+
 .PHONY: clean
 clean:
 	rm -rf .data
