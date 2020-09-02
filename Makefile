@@ -1,4 +1,4 @@
-.data/raw .data/processed .data/model .data/submissions .data/trials:
+.data/raw .data/processed .data/model .data/submissions .data/trials reports:
 	mkdir -p $@
 
 .data/trials/studies.db: | .data/trials
@@ -36,19 +36,22 @@
 .data/processed/economics-history.parquet: src/data/make_economics_history.py | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-000.parquet: src/feature_engineering/make_dataset_000.py .data/processed/%.parquet | .data/processed
+.data/processed/%-features-000.parquet: src/feature_engineering/make_feature_set_000.py .data/processed/%.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-001.parquet: src/feature_engineering/make_dataset_001.py .data/processed/%.parquet .data/processed/sales-train-by-month.parquet .data/processed/date-ids.parquet | .data/processed
+.data/processed/%-features-001.parquet: src/feature_engineering/make_feature_set_001.py .data/processed/%.parquet .data/processed/sales-train-by-month.parquet .data/processed/date-ids.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-002.parquet: src/feature_engineering/make_dataset_002.py .data/processed/%-features-000.parquet .data/processed/item-categories-metadata.parquet | .data/processed
+.data/processed/%-features-002.parquet: src/feature_engineering/make_feature_set_002.py .data/processed/%-features-000.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-003.parquet: src/feature_engineering/make_dataset_003.py .data/processed/%-features-000.parquet .data/processed/sales-train-by-month.parquet .data/processed/item-categories-metadata.parquet | .data/processed
+.data/processed/%-features-003.parquet: src/feature_engineering/make_feature_set_003.py .data/processed/%-features-000.parquet .data/processed/sales-train-by-month.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-004.parquet: src/feature_engineering/make_dataset_004.py .data/processed/%-features-000.parquet .data/processed/economics-history.parquet | .data/processed
+.data/processed/%-features-004.parquet: src/feature_engineering/make_feature_set_004.py .data/processed/%-features-000.parquet .data/processed/economics-history.parquet | .data/processed
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/processed/%-features-005.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-001.parquet .data/processed/%-features-002.parquet .data/processed/%-features-003.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/model/xgb-features-%.model: src/model/make_xgb.py .data/trials/studies.db .data/processed/train-set-features-%.parquet | .data/model
