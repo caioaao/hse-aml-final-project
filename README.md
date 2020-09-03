@@ -27,10 +27,13 @@ Each feature set builds on top of the last
 | 002 | item categories metadata |
 | 003 | encoding for shops using previous month's item category mean sales |
 | 004 | external indicators: lagged RUB to USD/CNY/EUR conversions, lagged MOEX (Moscow Exchange) index |
+| 005 | |
 
-### Models
+### Experiments
 
-We define a model as a feature-set + an algorithm + tuned hyperparameters.
+We define an experiment as a feature-set + an algorithm + tuned hyperparameters. Their evaluation are the validation score and the public LB score (also our generalization score). Since our amount of submissions is limited I didn't send every result to the competition and used my validation score to choose the ones I submitted.
+
+All hyperparameters were tuned using optuna, and all validation was made by the same script.
 
 | ID | Algorithm | Feature set | Validation Score | Public LB score |
 | -- | -- | -- | -- | -- |

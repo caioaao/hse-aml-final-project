@@ -15,7 +15,7 @@ from . import tscv
 from ..feature_engineering import df_to_X_y
 
 
-MAX_EVALS = 200
+MAX_EVALS = 50
 
 
 DEFAULT_PARAMS = {"n_jobs": -1,
@@ -151,7 +151,7 @@ if __name__ == '__main__':
         storage=trials_db, pruner=optuna.pruners.HyperbandPruner())
 
     try:
-        study.optimize(objective, n_trials=64, n_jobs=1, gc_after_trial=True)
+        study.optimize(objective, n_trials=MAX_EVALS, n_jobs=1, gc_after_trial=True)
     except KeyboardInterrupt:
         print("Canceling optimization step before it finishes")
 
