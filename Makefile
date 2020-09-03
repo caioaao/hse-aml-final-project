@@ -66,7 +66,7 @@
 .data/submissions/lgb-features-%.csv: src/submission/make_submission.py .data/model/lgb-features-%.model .data/processed/test-set-features-%.parquet | .data/submissions
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/model-outputs/cv-xgb-features-%.parquet: src/model/make_cv_predict.py .data/model/xgb-features-%.model .data/processed/train-set-features-%.parquet | .data/model
+.data/model-outputs/cv-xgb-features-%.parquet: src/model/make_cv_predict.py .data/model/xgb-features-%.model .data/processed/train-set-features-%.parquet | .data/model-outputs
 	pipenv run scripts/runpy.sh $^ $@
 
 reports/cv-score-%.log: src/model/make_cv_report.py .data/model-outputs/cv-%.parquet | reports

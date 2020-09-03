@@ -10,7 +10,7 @@ if __name__ == '__main__':
     cv_df = pd.read_parquet(sys.argv[1])
     output_path = sys.argv[2]
 
-    logging.basicConfig(handlers=[logging.FileHandler(output_path),
+    logging.basicConfig(handlers=[logging.FileHandler(output_path, mode='w'),
                                   logging.StreamHandler()],
                         force=True, level=logging.INFO,
                         format='%(asctime)-15s %(message)s')
