@@ -32,6 +32,7 @@ Each feature set builds on top of the last
 
 We define a model as a feature-set + an algorithm + tuned hyperparameters.
 
-| ID | Algorithm | Feature set | CV Score | Public LB score |
+| ID | Algorithm | Feature set | Validation Score | Public LB score |
 | -- | -- | -- | -- | -- |
-| 000 | XGB | 000 | | |
+| 000 | XGB | 000 | 1.04507 | 1.18114 |
+| 001 | XGB | 001 | 0.86231 | 1.01806 |

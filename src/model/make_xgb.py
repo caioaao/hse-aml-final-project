@@ -18,7 +18,8 @@ from ..feature_engineering import df_to_X_y
 MAX_EVALS = 200
 
 
-DEFAULT_PARAMS = {"n_jobs": -1}
+DEFAULT_PARAMS = {"n_jobs": -1,
+                  "objective": "reg:squarederror"}
 
 
 def _xgb_feval(y_pred, dtrain):
@@ -34,9 +35,7 @@ def _xgb_feval(y_pred, dtrain):
 def _trial_to_params(trial: Trial):
     params = {**DEFAULT_PARAMS,
               "booster": trial.suggest_categorical(
-                  "booster", ['gbtree', 'gblinear']),
-              "objective": trial.suggest_categorical(
-                  "objective", ["reg:squarederror", "reg:gamma"]),
+                  "booster", ['gbtree']), # , 'gblinear', 'dart' are too slow
               "seed": trial.suggest_int('seed', 0, 999999),
               "learning_rate": trial.suggest_loguniform(
                   'learning_rate', 0.005, 0.5),
@@ -46,7 +45,7 @@ def _trial_to_params(trial: Trial):
               "reg_lambda": trial.suggest_categorical(
                   "reg_lambda", [1, 1, 1, 1, 2, 3, 4, 5, 1])}
 
-    if params['booster'] == 'gbtree':
+    if params['booster'] == 'gbtree' or params['booster'] == 'dart':
         params.update({
             "max_depth": trial.suggest_int('max_depth', 2, 15, 1),
             "subsample": trial.suggest_discrete_uniform('subsample',
@@ -68,8 +67,18 @@ def _trial_to_params(trial: Trial):
             "max_delta_step": trial.suggest_categorical("max_delta_step",
                                                         [0, 0, 0, 0, 0,
                                                          1, 2, 5, 8]),
+            "grow_policy": trial.suggest_categorical(
+                "grow_policy", ["depthwise", "lossguide"]),
             "tree_method": "gpu_hist",
             "gpu_id": 0})
+    if params["booster"] == "dart":
+        params.update({
+            "sample_type": trial.suggest_categorical(
+                "sample_type", ["uniform", "weighted"]),
+            "normalize_type": trial.suggest_categorical(
+                "normalize_type", ["tree", "forest"]),
+            "rate_drop": trial.suggest_loguniform("rate_drop", 1e-8, 1.0),
+            "skip_drop": trial.suggest_loguniform("skip_drop", 1e-8, 1.0)})
     return params
 
 
@@ -101,6 +110,7 @@ def _complete_params(params):
         params.update({"tree_method": "gpu_hist",
                        "gpu_id": 0})
     return params
+
 
 def train(params, X_train, y_train):
     dtrain = xgb.DMatrix(X_train, y_train)
@@ -138,11 +148,10 @@ if __name__ == '__main__':
     trials_db = 'sqlite:///%s' % trials_db_path
     study = optuna.create_study(
         direction='minimize', load_if_exists=True, study_name=output_path,
-        storage=trials_db, sampler=optuna.samplers.RandomSampler(seed=8338),
-        pruner=optuna.pruners.HyperbandPruner())
+        storage=trials_db, pruner=optuna.pruners.HyperbandPruner())
 
     try:
-        study.optimize(objective, n_trials=50, n_jobs=1, gc_after_trial=True)
+        study.optimize(objective, n_trials=64, n_jobs=1, gc_after_trial=True)
     except KeyboardInterrupt:
         print("Canceling optimization step before it finishes")
 

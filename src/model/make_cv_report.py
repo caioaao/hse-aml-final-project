@@ -19,7 +19,7 @@ if __name__ == '__main__':
     for fold_id in cv_df['fold_id'].unique():
         y_true = cv_df[cv_df['fold_id'] == fold_id]['item_cnt_month'].values
         y_pred = cv_df[cv_df['fold_id'] == fold_id]['oof_preds'].values
-        err = mean_squared_error(y_true, y_pred, squared=False)
+        err = mean_squared_error(y_true, np.clip(y_pred, 0, 20), squared=False)
         logging.info('Fold %d: RMSE: %.5f' % (fold_id, err))
         scores.append(err)
     logging.info('CV SCORE: %.5f (std %.5f)' % (np.mean(scores),
