@@ -18,14 +18,12 @@ After experimenting with the notebooks, I wrote the scripts inside [./src](./src
 
 ### Feature sets
 
-Each feature set builds on top of the last
-
 | ID | Description |
 | -- | -- |
 | 000 | baseline: item ids, shop ids, date block num |
 | 001 | month number, year number, lagged item counts |
 | 002 | item categories metadata |
-| 003 | encoding for shops using previous month's item category mean sales |
+| 003 | target encoding using `item_id`, `shop_id`, `category_name`, and `subcategory_name`  |
 | 004 | external indicators: lagged RUB to USD/CNY/EUR conversions, lagged MOEX (Moscow Exchange) index |
 | 005 | |
 

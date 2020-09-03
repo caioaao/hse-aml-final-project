@@ -19,6 +19,7 @@ if __name__ == '__main__':
     output_path = sys.argv[4]
 
     sales_train = sales_train.merge(categories_metadata, on='item_id')
+    df = df.merge(categories_metadata, on='item_id')
 
     for cols in tqdm(MEAN_ENCODE_COLS):
         encoding_df = mean_encoding_df(sales_train, cols + ['date_block_num'])
