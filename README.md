@@ -37,3 +37,5 @@ All hyperparameters were tuned using optuna, and all validation was made by the 
 | -- | -- | -- | -- | -- |
 | 000 | XGB | 000 | 1.04507 | 1.18114 |
 | 001 | XGB | 001 | 0.86231 | 1.01806 |
+| 002 | XGB | 002 | 0.94322 | |
+| 003 | XGB | 003 | 0.83894 | 0.97132 |
