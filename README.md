@@ -34,7 +34,7 @@ After experimenting with the notebooks, I wrote the scripts inside [./src](./src
 
 We define an experiment as a feature-set + an algorithm + tuned hyperparameters. Their evaluation are the validation score and the public LB score (also our generalization score). Since our amount of submissions is limited I didn't send every result to the competition and used my validation score to choose the ones I submitted.
 
-All hyperparameters were tuned using optuna, and all validation was made by the same script.
+All HPO were done using [optuna](https://optuna.readthedocs.io/en/stable/), and all validation was made by the same script.
 
 | ID | Algorithm | Feature set | Validation Score | Public LB score |
 | -- | -- | -- | -- | -- |
@@ -46,4 +46,4 @@ All hyperparameters were tuned using optuna, and all validation was made by the 
 | 005 | XGB | 005 | 0.85838 | |
 | 006 | XGB | 006 | 0.84128 | |
 | 007 | XGB | 007 | 0.86218 | |
-| 008 | XGB | 008 | | |
+| 008 | XGB | 008 | 0.83944 | |
