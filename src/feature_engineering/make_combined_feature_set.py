@@ -7,8 +7,9 @@ if __name__ == '__main__':
     output_path = sys.argv[-1]
 
     input_dfs = [pd.read_parquet(p) for p in input_dfs_paths]
-
-    input_dfs = [input_dfs[0]] + [input_df.drop(columns=input_dfs[0].columns)
-                                  for input_df in input_dfs[1:]]
+    prev_cols = []
+    for df in input_dfs:
+        df.drop(columns=prev_cols, errors='ignore', inplace=True)
+        prev_cols = prev_cols + list(df.columns)
 
     pd.concat(input_dfs, axis=1).to_parquet(output_path)
