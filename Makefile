@@ -63,7 +63,16 @@
 .data/processed/%-features-004.parquet: src/feature_engineering/make_feature_set_004.py .data/processed/%-features-000.parquet .data/processed/economics-history.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-005.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-001.parquet .data/processed/%-features-002.parquet .data/processed/%-features-003.parquet  .data/processed/%-features-004.parquet | .data/processed
+.data/processed/%-features-005.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-001.parquet .data/processed/%-features-002.parquet .data/processed/%-features-003.parquet .data/processed/%-features-004.parquet | .data/processed
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/processed/%-features-006.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-002.parquet .data/processed/%-features-003.parquet| .data/processed
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/processed/%-features-007.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-001.parquet .data/processed/%-features-002.parquet .data/processed/%-features-003.parquet| .data/processed
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/processed/%-features-008.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-003.parquet .data/processed/%-features-004.parquet| .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
 ###############################################################################

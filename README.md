@@ -24,8 +24,11 @@ After experimenting with the notebooks, I wrote the scripts inside [./src](./src
 | 001 | month number, year number, lagged item counts |
 | 002 | item categories metadata |
 | 003 | target encoding using `item_id`, `shop_id`, `category_name`, and `subcategory_name`  |
-| 004 | external indicators: lagged RUB to USD/CNY/EUR conversions, lagged MOEX (Moscow Exchange) index |
+| 004 | external indicators: RUB to USD/CNY/EUR conversions, MOEX (Moscow Exchange) index (lagged and same month values) |
 | 005 | 000 + 001 + 002 + 003 + 004 |
+| 006 | 000 + 002 + 003 |
+| 007 | 000 + 001 + 002 + 003 |
+| 008 | 000 + 003 + 004 |
 
 ### Experiments
 
@@ -40,4 +43,7 @@ All hyperparameters were tuned using optuna, and all validation was made by the 
 | 002 | XGB | 002 | 0.94322 | |
 | 003 | XGB | 003 | 0.83894 | 0.97132 |
 | 004 | XGB | 004 | 1.04439 | |
-| 005 | XGB | 005 | | |
+| 005 | XGB | 005 | 0.85838 | |
+| 006 | XGB | 006 | 0.84128 | |
+| 007 | XGB | 007 | 0.86218 | |
+| 008 | XGB | 008 | | |
