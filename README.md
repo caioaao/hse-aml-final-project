@@ -46,4 +46,4 @@ All HPO were done using [optuna](https://optuna.readthedocs.io/en/stable/), and 
 | 005 | XGB | 005 | 0.85838 | |
 | 006 | XGB | 006 | 0.84128 | |
 | 007 | XGB | 007 | 0.86218 | |
-| 008 | XGB | 008 | 0.83944 | |
+| 008 | XGB | 008 | 0.83944 | 1.00284 |
