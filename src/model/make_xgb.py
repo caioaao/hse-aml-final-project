@@ -47,7 +47,7 @@ def _trial_to_params(trial: Trial):
 
     if params['booster'] == 'gbtree' or params['booster'] == 'dart':
         params.update({
-            "max_depth": trial.suggest_int('max_depth', 2, 15, 1),
+            "max_depth": trial.suggest_int('max_depth', 2, 25),
             "subsample": trial.suggest_discrete_uniform('subsample',
                                                         .2, 1, .05),
             "colsample_bytree": trial.suggest_discrete_uniform(
@@ -151,7 +151,8 @@ if __name__ == '__main__':
         storage=trials_db, pruner=optuna.pruners.HyperbandPruner())
 
     try:
-        study.optimize(objective, n_trials=MAX_EVALS, n_jobs=1, gc_after_trial=True)
+        study.optimize(objective, n_trials=MAX_EVALS, n_jobs=1,
+                       gc_after_trial=True, catch=(xgb.core.XGBoostError,))
     except KeyboardInterrupt:
         print("Canceling optimization step before it finishes")
 
