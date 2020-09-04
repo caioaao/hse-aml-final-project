@@ -37,4 +37,5 @@ if __name__ == '__main__':
             df, encoding_df, encoding_col,
             max_lag=1, index_cols=cols)
 
+    print("%s columns: %s" (output_path, str(df.columns)))
     df.to_parquet(output_path)

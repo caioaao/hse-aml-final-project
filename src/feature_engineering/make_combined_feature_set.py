@@ -12,4 +12,7 @@ if __name__ == '__main__':
         df.drop(columns=prev_cols, errors='ignore', inplace=True)
         prev_cols = prev_cols + list(df.columns)
 
-    pd.concat(input_dfs, axis=1).to_parquet(output_path)
+    df = pd.concat(input_dfs, axis=1)
+
+    print("%s columns: %s" (output_path, str(df.columns)))
+    df.to_parquet(output_path)
