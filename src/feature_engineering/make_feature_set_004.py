@@ -22,5 +22,5 @@ if __name__ == '__main__':
     df = df.merge(history_df, on='date_block_num', how='left', sort=False)
 
     add_as_features(df, feature_cols, inplace=True)
-    print("%s columns: %s" (output_path, str(df.columns)))
+    print("%s columns: %s" % (output_path, str(df.columns)))
     df.to_parquet(output_path)

@@ -9,5 +9,5 @@ if __name__ == '__main__':
 
     df = add_as_cat_features(input_df, ['item_id', 'shop_id',
                                         'date_block_num'])
-    print("%s columns: %s" (output_path, str(df.columns)))
+    print("%s columns: %s" % (output_path, str(df.columns)))
     df.to_parquet(output_path)

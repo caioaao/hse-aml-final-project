@@ -24,5 +24,5 @@ if __name__ == '__main__':
     df.drop(columns=['le_category_name', 'le_subcategory_name'],
             inplace=True)
 
-    print("%s columns: %s" (output_path, str(df.columns)))
+    print("%s columns: %s" % (output_path, str(df.columns)))
     df.to_parquet(output_path)

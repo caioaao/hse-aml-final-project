@@ -14,5 +14,5 @@ if __name__ == '__main__':
                              ['date_block_num', 'month_id', 'year_id'])
     df = add_lagged_features(df, sales_train_by_month, 'item_cnt')
 
-    print("%s columns: %s" (output_path, str(df.columns)))
+    print("%s columns: %s" % (output_path, str(df.columns)))
     df.to_parquet(output_path)
