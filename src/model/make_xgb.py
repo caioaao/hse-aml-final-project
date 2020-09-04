@@ -150,11 +150,13 @@ if __name__ == '__main__':
         direction='minimize', load_if_exists=True, study_name=output_path,
         storage=trials_db, pruner=optuna.pruners.HyperbandPruner())
 
-    try:
-        study.optimize(objective, n_trials=MAX_EVALS, n_jobs=1,
-                       gc_after_trial=True, catch=(xgb.core.XGBoostError,))
-    except KeyboardInterrupt:
-        print("Canceling optimization step before it finishes")
+    n_trials = MAX_EVALS - len(study.trials)
+    if n_trials > 0:
+        try:
+            study.optimize(objective, n_trials=n_trials, n_jobs=1,
+                           gc_after_trial=True, catch=(xgb.core.XGBoostError,))
+        except KeyboardInterrupt:
+            print("Canceling optimization step before it finishes")
 
     best_ntree_limit = best_num_round(study.best_params, X_train, y_train,
                                       cv_splits)
