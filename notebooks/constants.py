@@ -6,8 +6,8 @@ DATA_DIR='../.data'
 
 RAW_DATA_DIR = os.path.join(DATA_DIR, 'raw')
 PROCESSED_DATA_DIR = os.path.join(DATA_DIR, 'processed')
-MODELS_DIR = os.path.join(DATA_DIR, 'models')
-MODEL_OUTPUTS_DIR = os.path.join(DATA_DIR, 'model-output')
+MODELS_DIR = os.path.join(DATA_DIR, 'model')
+MODEL_OUTPUTS_DIR = os.path.join(DATA_DIR, 'model-outputs')
 TMP_DIR=tempfile.mkdtemp()
 
 # also load them as env variables

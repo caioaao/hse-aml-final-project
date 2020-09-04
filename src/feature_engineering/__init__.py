@@ -29,6 +29,10 @@ def drop_non_features(df, inplace=False):
                    inplace=inplace)
 
 
+def get_feature_cols(df):
+    return drop_non_features(df).columns
+
+
 def add_as_features(df, cols, inplace=False, feature_type='numerical'):
     if not inplace:
         df = df.copy()
