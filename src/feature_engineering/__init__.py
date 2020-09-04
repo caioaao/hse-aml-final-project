@@ -33,7 +33,7 @@ def add_as_features(df, cols, inplace=False, feature_type='numerical'):
     if not inplace:
         df = df.copy()
 
-    if feature_type == 'numeric':
+    if feature_type == 'numerical':
         pref = FEATURE_PREFIX
     elif feature_type == 'categorical':
         pref = CAT_FEATURE_PREFIX
