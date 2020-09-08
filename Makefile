@@ -51,28 +51,22 @@
 .data/processed/%-features-000.parquet: src/feature_engineering/make_feature_set_000.py .data/processed/%.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-001.parquet: src/feature_engineering/make_feature_set_001.py .data/processed/%.parquet .data/processed/sales-train-by-month.parquet .data/processed/date-ids.parquet | .data/processed
+.data/processed/%-features-001.parquet: src/feature_engineering/make_feature_set_001.py .data/processed/%.parquet .data/processed/date-ids.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-002.parquet: src/feature_engineering/make_feature_set_002.py .data/processed/%.parquet .data/processed/item-categories-metadata.parquet | .data/processed
+.data/processed/%-features-002.parquet: src/feature_engineering/make_feature_set_002.py .data/processed/sales-train-by-month.parquet .data/processed/date-ids.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-003.parquet: src/feature_engineering/make_feature_set_003.py .data/processed/%.parquet .data/processed/sales-train-by-month.parquet .data/processed/item-categories-metadata.parquet | .data/processed
+.data/processed/%-features-003.parquet: src/feature_engineering/make_feature_set_003.py .data/processed/%.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-004.parquet: src/feature_engineering/make_feature_set_004.py .data/processed/%.parquet .data/processed/economics-history.parquet | .data/processed
+.data/processed/%-features-004.parquet: src/feature_engineering/make_feature_set_004.py .data/processed/%.parquet .data/processed/sales-train-by-month.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-005.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-000.parquet .data/processed/%-features-001.parquet .data/processed/%-features-002.parquet .data/processed/%-features-003.parquet .data/processed/%-features-004.parquet | .data/processed
+.data/processed/%-features-005.parquet: src/feature_engineering/make_feature_set_005.py .data/processed/%.parquet .data/processed/economics-history.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-006.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-000.parquet .data/processed/%-features-002.parquet .data/processed/%-features-003.parquet| .data/processed
-	pipenv run scripts/runpy.sh $^ $@
-
-.data/processed/%-features-007.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-000.parquet .data/processed/%-features-001.parquet .data/processed/%-features-002.parquet .data/processed/%-features-003.parquet| .data/processed
-	pipenv run scripts/runpy.sh $^ $@
-
-.data/processed/%-features-008.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-000.parquet .data/processed/%-features-003.parquet .data/processed/%-features-004.parquet| .data/processed
+.data/processed/%-features-006.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-000.parquet .data/processed/%-features-001.parquet .data/processed/%-features-002.parquet .data/processed/%-features-003.parquet .data/processed/%-features-004.parquet .data/processed/%-features-005.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
 ###############################################################################
@@ -112,5 +106,12 @@ reports/cv-score-%.log: src/model/make_cv_report.py .data/model-outputs/cv-%.par
 .PHONY: clean
 clean:
 	rm -rf .data
+
+.PHONY: clean-derived
+clean-derived:
+	rm -rf .data/processed .data/model .data/model-outputs .data/submissions .data/trials reports
+
+.PHONY: all-reports
+all-reports: reports/cv-score-xgb-features-000.log reports/cv-score-xgb-features-001.log reports/cv-score-xgb-features-002.log reports/cv-score-xgb-features-003.log reports/cv-score-xgb-features-004.log reports/cv-score-xgb-features-005.log reports/cv-score-xgb-features-006.log
 
 .SECONDARY:
