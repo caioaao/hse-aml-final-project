@@ -114,4 +114,8 @@ clean-derived:
 .PHONY: all-reports
 all-reports: reports/cv-score-xgb-features-000.log reports/cv-score-xgb-features-001.log reports/cv-score-xgb-features-002.log reports/cv-score-xgb-features-003.log reports/cv-score-xgb-features-004.log reports/cv-score-xgb-features-005.log reports/cv-score-xgb-features-006.log
 
+.PHONY: clean-models
+clean-models:
+	rm -rf .data/model .data/model-outputs .data/trials
+
 .SECONDARY:
