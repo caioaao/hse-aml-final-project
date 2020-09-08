@@ -54,7 +54,7 @@
 .data/processed/%-features-001.parquet: src/feature_engineering/make_feature_set_001.py .data/processed/%.parquet .data/processed/date-ids.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-002.parquet: src/feature_engineering/make_feature_set_002.py .data/processed/sales-train-by-month.parquet .data/processed/date-ids.parquet | .data/processed
+.data/processed/%-features-002.parquet: src/feature_engineering/make_feature_set_002.py .data/processed/%.parquet .data/processed/sales-train-by-month.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/processed/%-features-003.parquet: src/feature_engineering/make_feature_set_003.py .data/processed/%.parquet .data/processed/item-categories-metadata.parquet | .data/processed

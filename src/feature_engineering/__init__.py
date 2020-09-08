@@ -4,6 +4,7 @@ import pandas as pd
 FEATURE_PREFIX = 'f__'
 CAT_FEATURE_PREFIX = '%scat__' % FEATURE_PREFIX
 
+
 def add_lagged_features(
         df, history_df, feature_cols,
         max_lag=32, index_cols=['item_id', 'shop_id'],

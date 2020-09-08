@@ -13,7 +13,7 @@ if __name__ == '__main__':
     le_cat_name = LabelEncoder().fit(cats_metadata['category_name'])
     le_subcat_name = LabelEncoder().fit(cats_metadata['subcategory_name'])
 
-    df = input_df.merge(cats_metadata, on='item_id')
+    df = input_df.merge(cats_metadata, on='item_id', how='left', sort=False)
 
     df['le_category_name'] = le_cat_name.transform(df['category_name'])
     df['le_subcategory_name'] = le_subcat_name.transform(
