@@ -21,14 +21,12 @@ After experimenting with the notebooks, I wrote the scripts inside [./src](./src
 | ID | Description |
 | -- | -- |
 | 000 | baseline: item ids, shop ids, date block num |
-| 001 | month number, year number, lagged item counts |
-| 002 | item categories metadata |
-| 003 | target encoding using `item_id`, `shop_id`, `category_name`, and `subcategory_name`  |
-| 004 | external indicators: RUB to USD/CNY/EUR conversions, MOEX (Moscow Exchange) index (lagged and same month values) |
-| 005 | 000 + 001 + 002 + 003 + 004 |
-| 006 | 000 + 002 + 003 |
-| 007 | 000 + 001 + 002 + 003 |
-| 008 | 000 + 003 + 004 |
+| 001 | month number, year number |
+| 002 | lagged item counts |
+| 003 | item categories metadata |
+| 004 | target encoding using `item_id`, `shop_id`, `category_name`, and `subcategory_name`  |
+| 005 | external indicators: RUB to USD/CNY/EUR conversions, MOEX (Moscow Exchange) index (lagged and same month values) |
+| 006 | 000 + 001 + 002 + 003 + 004 + 005 |
 
 ### Experiments
 
@@ -39,11 +37,9 @@ All HPO were done using [optuna](https://optuna.readthedocs.io/en/stable/), and 
 | ID | Algorithm | Feature set | Validation Score | Public LB score |
 | -- | -- | -- | -- | -- |
 | 000 | XGB | 000 | 1.04507 | 1.18114 |
-| 001 | XGB | 001 | 0.85824 | 1.01800 |
-| 002 | XGB | 002 | 0.93756 | |
-| 003 | XGB | 003 | 0.84287 | 0.98811 |
-| 004 | XGB | 004 | 1.04352 | |
-| 005 | XGB | 005 | 0.85924 | |
-| 006 | XGB | 006 | 0.84128 | |
-| 007 | XGB | 007 | 0.86218 | 1.02204 |
-| 008 | XGB | 008 | 0.83944 | 1.00284 |
+| 001 | XGB | 001 | 1.07913 | |
+| 002 | XGB | 002 | | |
+| 003 | XGB | 003 | 1.02102 | |
+| 004 | XGB | 004 | 0.84411 | |
+| 005 | XGB | 005 | | |
+| 006 | XGB | 006 | | |
