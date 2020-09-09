@@ -73,6 +73,9 @@
 # Models
 ###############################################################################
 
+.data/model/xgb-baseline.model: src/model/make_xgb_baseline.py | .data/model
+	pipenv run scripts/runpy.sh $^ $@
+
 .data/model/xgb-features-%.model: src/model/make_xgb.py .data/trials/studies.db .data/processed/train-set-features-%.parquet | .data/model
 	pipenv run scripts/runpy.sh $^ $@
 
@@ -96,6 +99,10 @@
 .data/model-outputs/cv-xgb-features-%.parquet: src/model/make_cv_predict.py .data/model/xgb-features-%.model .data/processed/train-set-features-%.parquet | .data/model-outputs
 	pipenv run scripts/runpy.sh $^ $@
 
+
+.data/model-outputs/cv-xgb-baseline-features-%.parquet: src/model/make_cv_predict.py .data/model/xgb-baseline.model .data/processed/train-set-features-%.parquet | .data/model-outputs
+	pipenv run scripts/runpy.sh $^ $@
+
 ###############################################################################
 # Reports
 ###############################################################################
@@ -112,7 +119,7 @@ clean-derived:
 	rm -rf .data/processed .data/model .data/model-outputs .data/submissions .data/trials reports
 
 .PHONY: all-reports
-all-reports: reports/cv-score-xgb-features-000.log reports/cv-score-xgb-features-001.log reports/cv-score-xgb-features-002.log reports/cv-score-xgb-features-003.log reports/cv-score-xgb-features-004.log reports/cv-score-xgb-features-005.log reports/cv-score-xgb-features-006.log
+all-reports: reports/cv-score-xgb-baseline-features-000.log reports/cv-score-xgb-baseline-features-001.log reports/cv-score-xgb-baseline-features-002.log reports/cv-score-xgb-baseline-features-003.log reports/cv-score-xgb-baseline-features-004.log reports/cv-score-xgb-baseline-features-005.log reports/cv-score-xgb-baseline-features-006.log
 
 .PHONY: clean-models
 clean-models:
