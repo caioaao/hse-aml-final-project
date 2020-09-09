@@ -44,6 +44,9 @@
 .data/processed/economics-history.parquet: src/data/make_economics_history.py | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
+.data/processed/prices-statistics.parquet: src/data/make_prices_statistics.py .data/raw/competitive-data-science-predict-future-sales.zip .data/processed/train-set.parquet .data/processed/item-categories-metadata.parquet | .data/processed
+	pipenv run scripts/runpy.sh $^ $@
+
 ###############################################################################
 # Feature sets
 ###############################################################################
