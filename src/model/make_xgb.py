@@ -163,6 +163,7 @@ if __name__ == '__main__':
 
     reg = sklearn_regressor(study.best_params, best_ntree_limit)
 
+    X_train, y_train = df_to_X_y(train_set, window=16)
     reg = reg.fit(X_train, y_train)
 
     print(reg)

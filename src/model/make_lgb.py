@@ -48,5 +48,6 @@ if __name__ == '__main__':
     reg = lgb.LGBMRegressor(
         n_estimators=model.best_iteration, **model.params)
 
+    X, y = df_to_X_y(train_set, window=16)
     reg = reg.fit(X, y)
     joblib.dump(reg, output_path)

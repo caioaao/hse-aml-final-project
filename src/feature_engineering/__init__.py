@@ -57,7 +57,9 @@ def df_to_X(df):
     return drop_non_features(df).values
 
 
-def df_to_X_y(df):
+def df_to_X_y(df, window=None):
+    if window:
+        df = df[df['date_block_num'] >= 32 - window]
     return df_to_X(df), df['item_cnt_month'].values
 
 
