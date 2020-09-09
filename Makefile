@@ -69,6 +69,9 @@
 .data/processed/%-features-006.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-000.parquet .data/processed/%-features-001.parquet .data/processed/%-features-002.parquet .data/processed/%-features-003.parquet .data/processed/%-features-004.parquet .data/processed/%-features-005.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
+.data/processed/%-features-007.parquet: src/feature_engineering/make_feature_set_007.py .data/processed/%-features-002.parquet | .data/processed
+	pipenv run scripts/runpy.sh $^ $@
+
 ###############################################################################
 # Models
 ###############################################################################
@@ -119,7 +122,7 @@ clean-derived:
 	rm -rf .data/processed .data/model .data/model-outputs .data/submissions .data/trials reports
 
 .PHONY: all-reports
-all-reports: reports/cv-score-xgb-baseline-features-000.log reports/cv-score-xgb-baseline-features-001.log reports/cv-score-xgb-baseline-features-002.log reports/cv-score-xgb-baseline-features-003.log reports/cv-score-xgb-baseline-features-004.log reports/cv-score-xgb-baseline-features-005.log reports/cv-score-xgb-baseline-features-006.log
+all-reports: reports/cv-score-xgb-baseline-features-000.log reports/cv-score-xgb-baseline-features-001.log reports/cv-score-xgb-baseline-features-002.log reports/cv-score-xgb-baseline-features-003.log reports/cv-score-xgb-baseline-features-004.log reports/cv-score-xgb-baseline-features-005.log reports/cv-score-xgb-baseline-features-006.log reports/cv-score-xgb-baseline-features-007.log
 
 .PHONY: clean-models
 clean-models:
