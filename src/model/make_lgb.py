@@ -26,7 +26,8 @@ if __name__ == '__main__':
 
     X, y = df_to_X_y(train_set)
     X_train, y_train, X_val, y_val = train_test_split(
-        X, y, date_vec=train_set['date_block_num'].values)
+        X, y, date_vec=train_set['date_block_num'].values,
+        train_start=16)
 
     dtrain = lgb.Dataset(X_train, label=y_train)
     dval = lgb.Dataset(X_val, label=y_val)
