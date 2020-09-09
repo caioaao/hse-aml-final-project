@@ -78,6 +78,9 @@
 .data/processed/%-features-008.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-000.parquet .data/processed/%-features-001.parquet .data/processed/%-features-003.parquet .data/processed/%-features-004.parquet .data/processed/%-features-005.parquet .data/processed/%-features-007.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
+.data/processed/%-features-009.parquet: src/feature_engineering/make_feature_set_009.py .data/processed/%.parquet  .data/processed/item-categories-metadata.parquet .data/processed/prices-statistics.parquet | .data/processed
+	pipenv run scripts/runpy.sh $^ $@
+
 ###############################################################################
 # Models
 ###############################################################################
@@ -128,7 +131,7 @@ clean-derived:
 	rm -rf .data/processed .data/model .data/model-outputs .data/submissions .data/trials reports
 
 .PHONY: features-baseline-reports
-features-baseline-reports: reports/cv-score-xgb-baseline-features-000.log reports/cv-score-xgb-baseline-features-001.log reports/cv-score-xgb-baseline-features-002.log reports/cv-score-xgb-baseline-features-003.log reports/cv-score-xgb-baseline-features-004.log reports/cv-score-xgb-baseline-features-005.log reports/cv-score-xgb-baseline-features-006.log reports/cv-score-xgb-baseline-features-007.log reports/cv-score-xgb-baseline-features-008.log
+features-baseline-reports: reports/cv-score-xgb-baseline-features-000.log reports/cv-score-xgb-baseline-features-001.log reports/cv-score-xgb-baseline-features-002.log reports/cv-score-xgb-baseline-features-003.log reports/cv-score-xgb-baseline-features-004.log reports/cv-score-xgb-baseline-features-005.log reports/cv-score-xgb-baseline-features-006.log reports/cv-score-xgb-baseline-features-007.log reports/cv-score-xgb-baseline-features-008.log reports/cv-score-xgb-baseline-features-009.log
 
 .PHONY: all-reports
 all-reports: features-baseline-reports reports/cv-score-xgb-features-000.log reports/cv-score-xgb-features-008.log
