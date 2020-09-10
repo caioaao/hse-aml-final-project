@@ -15,7 +15,7 @@ from . import tscv
 from ..feature_engineering import df_to_X_y
 
 
-MAX_EVALS = 50
+MAX_EVALS = 80
 
 
 DEFAULT_PARAMS = {"n_jobs": -1,
@@ -34,8 +34,8 @@ def _xgb_feval(y_pred, dtrain):
 
 def _trial_to_params(trial: Trial):
     params = {**DEFAULT_PARAMS,
-              "booster": trial.suggest_categorical(
-                  "booster", ['gbtree']), # , 'gblinear', 'dart' are too slow
+              # 'gblinear' and 'dart' boosters are too slow
+              "booster": trial.suggest_categorical("booster", ['gbtree']),
               "seed": trial.suggest_int('seed', 0, 999999),
               "learning_rate": trial.suggest_loguniform(
                   'learning_rate', 0.005, 0.5),
@@ -46,10 +46,18 @@ def _trial_to_params(trial: Trial):
                   "reg_lambda", [1, 1, 1, 1, 2, 3, 4, 5, 1])}
 
     if params['booster'] == 'gbtree' or params['booster'] == 'dart':
+        sampling_method = trial.suggest_categorical(
+            "sampling_method", ["uniform", "gradient_based"])
+        if sampling_method == 'uniform':
+            subsample = trial.suggest_discrete_uniform('subsample',
+                                                       .5, 1, .05)
+        else:
+            subsample = trial.suggest_discrete_uniform('subsample',
+                                                       .1, 1, .05)
         params.update({
             "max_depth": trial.suggest_int('max_depth', 2, 25),
-            "subsample": trial.suggest_discrete_uniform('subsample',
-                                                        .2, 1, .05),
+            "sampling_method": sampling_method,
+            "subsample": subsample,
             "colsample_bytree": trial.suggest_discrete_uniform(
                 'colsample_bytree', .20, 1., .01),
             "colsample_bylevel": trial.suggest_discrete_uniform(
@@ -83,7 +91,7 @@ def _trial_to_params(trial: Trial):
 
 
 def make_xgb_loss(X_train, y_train, cv_splits, verbose=True):
-    dtrain = xgb.DMatrix(X_train, y_train)
+    dtrain = xgb.DMatrix(X_train, y_train, missing=-999)
 
     def loss(params, callbacks=[]):
         return xgb.cv(
