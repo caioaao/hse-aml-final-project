@@ -15,7 +15,7 @@ from . import tscv
 from ..feature_engineering import df_to_X_y
 
 
-MAX_EVALS = 80
+MAX_EVALS = 110
 
 
 DEFAULT_PARAMS = {"n_jobs": -1,
@@ -39,11 +39,8 @@ def _trial_to_params(trial: Trial):
               "seed": trial.suggest_int('seed', 0, 999999),
               "learning_rate": trial.suggest_loguniform(
                   'learning_rate', 0.005, 0.5),
-              "reg_alpha": trial.suggest_categorical(
-                  "reg_alpha", [0, 0, 0, 0, 0, 0.00000001,
-                                0.00000005, 0.0000005, 0.000005]),
-              "reg_lambda": trial.suggest_categorical(
-                  "reg_lambda", [1, 1, 1, 1, 2, 3, 4, 5, 1])}
+              "lambda": trial.suggest_loguniform("lambda", 1e-8, 1.0),
+              "alpha": trial.suggest_loguniform("alpha", 1e-8, 1.0)}
 
     if params['booster'] == 'gbtree' or params['booster'] == 'dart':
         sampling_method = trial.suggest_categorical(
@@ -138,7 +135,8 @@ def best_num_round(params, X, y, cv_splits, verbose=True):
 
 
 def sklearn_regressor(params, num_round):
-    return XGBRegressor(n_estimators=num_round, **_complete_params(params))
+    return XGBRegressor(n_estimators=num_round, missing=-999,
+                        **_complete_params(params))
 
 
 if __name__ == '__main__':

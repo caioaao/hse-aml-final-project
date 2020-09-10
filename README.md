@@ -51,6 +51,7 @@ All HPO were done using [optuna](https://optuna.readthedocs.io/en/stable/), and 
 
 | ID | Algorithm | Feature set | Validation Score | Public LB score |
 | -- | -- | -- | -- | -- |
-| 000 | XGB | 000 | 1.04383 | 1.18194 |
-| 001 | XGB | 008 | __0.83436__ | __0.97848__ |
-| 003 | XGB | 015 | 0.85073 | 0.98583 |
+| 000 | XGB | 000 | 1.04264 | 1.18194 |
+| 001 | XGB | 008 | 0.83894 | 0.97848 |
+| 003 | XGB | 015 | __0.83572__ | __0.97531__ |
+| 003 | XGB | 017 | 0.83592 |  |
