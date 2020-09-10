@@ -21,7 +21,7 @@ def add_lagged_features(
         df = df.merge(tmp_df[['date_block_num'] + lag_cols + index_cols],
                       on=index_cols + ['date_block_num'], how='left',
                       sort=False)
-    if fill_value:
+    if fill_value is not None:
         df.fillna(fill_value, inplace=True)
     return df
 
