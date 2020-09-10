@@ -111,7 +111,8 @@ def features_delta(df, feature_cols, index_cols=['item_id', 'shop_id'],
     return df2[index_cols + [date_col] + delta_cols]
 
 
-def add_features_deltas(df, feature_cols, windows=[1, 3, 6], **kwargs):
+def add_features_deltas(df, feature_cols, windows=[1, 2, 3, 6, 9, 12],
+                        **kwargs):
     return pd.concat([df]
                      + [features_delta(df, feature_cols, window=w, **kwargs)
                         for w in tqdm(windows)])
