@@ -21,8 +21,10 @@ if __name__ == '__main__':
         item_cnt_rank_col = 'rank_%s_item_cnt_month' % ('_'.join(idx_cols))
 
         ranks_df[price_rank_col] = prices_stats.groupby(
-            idx_cols + ['date_block_num'])['item_price_median'].rank('dense')
+            idx_cols + ['date_block_num'])['item_price_median'].rank(
+                method='dense', pct=True)
         ranks_df[item_cnt_rank_col] = train_set.groupby(
-            idx_cols + ['date_block_num'])['item_cnt_month'].rank('dense')
+            idx_cols + ['date_block_num'])['item_cnt_month'].rank(
+                method='dense', pct=True)
 
     ranks_df.to_parquet(output_path)
