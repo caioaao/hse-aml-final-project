@@ -1,4 +1,4 @@
-from tqdm.auto import trange
+from tqdm.auto import trange, tqdm
 import pandas as pd
 
 FEATURE_PREFIX = 'f__'
@@ -92,3 +92,26 @@ def rolling_mean_encoding_df(df, on, label='item_cnt', w=20,
         tmp_df['date_block_num'] = m
         dfs.append(tmp_df)
     return pd.concat(dfs)
+
+
+def features_delta(df, feature_cols, index_cols=['item_id', 'shop_id'],
+                   window=1, date_col='date_block_num'):
+    df = df[feature_cols + index_cols + [date_col]]
+    aux_df = df.copy()
+
+    aux_df[date_col] = aux_df[date_col] + window
+    df2 = df.merge(aux_df, on=index_cols + [date_col], how='left', sort=False,
+                   suffixes=['_now', '_then'])
+    # we fill with 0 so the delta is just the new value
+    df2.fillna(0, inplace=True)
+    now_cols = ['%s_now' % col for col in feature_cols]
+    then_cols = ['%s_then' % col for col in feature_cols]
+    delta_cols = ['%s_delta_w%d' % (col, window) for col in feature_cols]
+    df2[delta_cols] = df2[now_cols].values - df2[then_cols].values
+    return df2[index_cols + [date_col] + delta_cols]
+
+
+def add_features_deltas(df, feature_cols, windows=[1, 3, 6], **kwargs):
+    return pd.concat([df]
+                     + [features_delta(df, feature_cols, window=w, **kwargs)
+                        for w in tqdm(windows)])
