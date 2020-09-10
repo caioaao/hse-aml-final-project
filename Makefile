@@ -50,6 +50,9 @@
 .data/processed/price-and-sales-ranks.parquet: src/data/make_ranks_df.py .data/processed/prices-statistics.parquet .data/processed/train-set.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
+.data/processed/sales-deltas.parquet: src/feature_engineering/make_sales_deltas.py .data/processed/train-set.parquet .data/processed/sales-train-by-month.parquet .data/processed/item-categories-metadata.parquet | .data/processed
+	pipenv run scripts/runpy.sh $^ $@
+
 ###############################################################################
 # Feature sets
 ###############################################################################

@@ -96,7 +96,6 @@ def rolling_mean_encoding_df(df, on, label='item_cnt', w=20,
 
 def features_delta(df, feature_cols, index_cols=['item_id', 'shop_id'],
                    window=1, date_col='date_block_num'):
-    df = df[feature_cols + index_cols + [date_col]]
     aux_df = df.copy()
 
     aux_df[date_col] = aux_df[date_col] + window
@@ -106,13 +105,17 @@ def features_delta(df, feature_cols, index_cols=['item_id', 'shop_id'],
     df2.fillna(0, inplace=True)
     now_cols = ['%s_now' % col for col in feature_cols]
     then_cols = ['%s_then' % col for col in feature_cols]
-    delta_cols = ['%s_delta_w%d' % (col, window) for col in feature_cols]
+    delta_cols = ['%s_%s_delta_w%d' % ('_'.join(index_cols), col, window)
+                  for col in feature_cols]
     df2[delta_cols] = df2[now_cols].values - df2[then_cols].values
-    return df2[index_cols + [date_col] + delta_cols]
+    return df2[delta_cols]
 
 
 def add_features_deltas(df, feature_cols, windows=[1, 2, 3, 6, 9, 12],
-                        **kwargs):
-    return pd.concat([df]
-                     + [features_delta(df, feature_cols, window=w, **kwargs)
+                        index_cols=['item_id', 'shop_id'],
+                        date_col='date_block_num'):
+    return pd.concat([df[index_cols + [date_col]]]
+                     + [features_delta(df, feature_cols, window=w,
+                                       index_cols=index_cols,
+                                       date_col=date_col)
                         for w in tqdm(windows)])
