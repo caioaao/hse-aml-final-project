@@ -155,6 +155,9 @@
 .data/submissions/lgb-features-%.csv: src/submission/make_submission.py .data/model/lgb-features-%.model .data/processed/test-set-features-%.parquet | .data/submissions
 	pipenv run scripts/runpy.sh $^ $@
 
+.PHONY: all-submissions
+all-submissions: .data/submissions/xgb-features-000.csv .data/submissions/xgb-features-008.csv .data/submissions/xgb-features-013.log .data/submissions/xgb-features-021.log
+
 ###############################################################################
 # Model outputs
 ###############################################################################
@@ -173,6 +176,16 @@
 reports/cv-score-%.log: src/model/make_cv_report.py .data/model-outputs/cv-%.parquet | reports
 	pipenv run scripts/runpy.sh $^ $@
 
+.PHONY: features-baseline-reports
+features-baseline-reports: reports/cv-score-xgb-baseline-features-000.log reports/cv-score-xgb-baseline-features-001.log reports/cv-score-xgb-baseline-features-002.log reports/cv-score-xgb-baseline-features-003.log reports/cv-score-xgb-baseline-features-004.log reports/cv-score-xgb-baseline-features-005.log reports/cv-score-xgb-baseline-features-006.log reports/cv-score-xgb-baseline-features-007.log reports/cv-score-xgb-baseline-features-008.log reports/cv-score-xgb-baseline-features-009.log reports/cv-score-xgb-baseline-features-010.log reports/cv-score-xgb-baseline-features-011.log reports/cv-score-xgb-baseline-features-012.log reports/cv-score-xgb-baseline-features-013.log reports/cv-score-xgb-baseline-features-014.log reports/cv-score-xgb-baseline-features-015.log reports/cv-score-xgb-baseline-features-016.log reports/cv-score-xgb-baseline-features-017.log reports/cv-score-xgb-baseline-features-018.log reports/cv-score-xgb-baseline-features-019.log reports/cv-score-xgb-baseline-features-020.log reports/cv-score-xgb-baseline-features-021.log
+
+.PHONY: all-reports
+all-reports: features-baseline-reports reports/cv-score-xgb-features-000.log reports/cv-score-xgb-features-008.log reports/cv-score-xgb-features-013.log reports/cv-score-xgb-features-021.log
+
+###############################################################################
+# Other commands and shortcuts
+###############################################################################
+
 .PHONY: clean
 clean:
 	rm -rf .data
@@ -181,14 +194,11 @@ clean:
 clean-derived:
 	rm -rf .data/processed .data/model .data/model-outputs .data/submissions .data/trials reports
 
-.PHONY: features-baseline-reports
-features-baseline-reports: reports/cv-score-xgb-baseline-features-000.log reports/cv-score-xgb-baseline-features-001.log reports/cv-score-xgb-baseline-features-002.log reports/cv-score-xgb-baseline-features-003.log reports/cv-score-xgb-baseline-features-004.log reports/cv-score-xgb-baseline-features-005.log reports/cv-score-xgb-baseline-features-006.log reports/cv-score-xgb-baseline-features-007.log reports/cv-score-xgb-baseline-features-008.log reports/cv-score-xgb-baseline-features-009.log reports/cv-score-xgb-baseline-features-010.log reports/cv-score-xgb-baseline-features-011.log reports/cv-score-xgb-baseline-features-012.log reports/cv-score-xgb-baseline-features-013.log reports/cv-score-xgb-baseline-features-014.log reports/cv-score-xgb-baseline-features-015.log reports/cv-score-xgb-baseline-features-016.log reports/cv-score-xgb-baseline-features-017.log reports/cv-score-xgb-baseline-features-018.log reports/cv-score-xgb-baseline-features-019.log reports/cv-score-xgb-baseline-features-020.log reports/cv-score-xgb-baseline-features-021.log
-
-.PHONY: all-reports
-all-reports: features-baseline-reports reports/cv-score-xgb-features-000.log reports/cv-score-xgb-features-008.log reports/cv-score-xgb-features-015.log reports/cv-score-xgb-features-017.log
-
 .PHONY: clean-models
 clean-models:
 	rm -rf .data/model .data/model-outputs .data/trials
+
+.PHONY: all
+all: all-reports all-submissions
 
 .SECONDARY:
