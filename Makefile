@@ -17,7 +17,10 @@
 # Canonical datasets
 ###############################################################################
 
-.data/processed/sales-train-by-month.parquet: src/data/make_sales_train_by_month.py .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
+.data/processed/sales-train.parquet: src/data/clean_sales_train.py .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/processed/sales-train-by-month.parquet: src/data/make_sales_train_by_month.py .data/processed/sales-train.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/processed/test-set.parquet: src/data/make_test_set.py .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
@@ -44,7 +47,7 @@
 .data/processed/economics-history.parquet: src/data/make_economics_history.py | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/prices-statistics.parquet: src/data/make_prices_statistics.py .data/raw/competitive-data-science-predict-future-sales.zip .data/processed/train-set.parquet .data/processed/item-categories-metadata.parquet | .data/processed
+.data/processed/prices-statistics.parquet: src/data/make_prices_statistics.py .data/processed/sales-train.parquet .data/processed/train-set.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/processed/price-and-sales-ranks.parquet: src/data/make_ranks_df.py .data/processed/prices-statistics.parquet .data/processed/train-set.parquet .data/processed/item-categories-metadata.parquet | .data/processed
@@ -170,7 +173,7 @@ clean-derived:
 	rm -rf .data/processed .data/model .data/model-outputs .data/submissions .data/trials reports
 
 .PHONY: features-baseline-reports
-features-baseline-reports: reports/cv-score-xgb-baseline-features-000.log reports/cv-score-xgb-baseline-features-001.log reports/cv-score-xgb-baseline-features-002.log reports/cv-score-xgb-baseline-features-003.log reports/cv-score-xgb-baseline-features-004.log reports/cv-score-xgb-baseline-features-005.log reports/cv-score-xgb-baseline-features-006.log reports/cv-score-xgb-baseline-features-007.log reports/cv-score-xgb-baseline-features-008.log reports/cv-score-xgb-baseline-features-009.log reports/cv-score-xgb-baseline-features-010.log reports/cv-score-xgb-baseline-features-011.log reports/cv-score-xgb-baseline-features-012.log reports/cv-score-xgb-baseline-features-013.log reports/cv-score-xgb-baseline-features-014.log reports/cv-score-xgb-baseline-features-015.log reports/cv-score-xgb-baseline-features-016.log reports/cv-score-xgb-baseline-features-017.log reports/cv-score-xgb-baseline-features-018.log
+features-baseline-reports: reports/cv-score-xgb-baseline-features-000.log reports/cv-score-xgb-baseline-features-001.log reports/cv-score-xgb-baseline-features-002.log reports/cv-score-xgb-baseline-features-003.log reports/cv-score-xgb-baseline-features-004.log reports/cv-score-xgb-baseline-features-005.log reports/cv-score-xgb-baseline-features-006.log reports/cv-score-xgb-baseline-features-007.log reports/cv-score-xgb-baseline-features-008.log reports/cv-score-xgb-baseline-features-009.log reports/cv-score-xgb-baseline-features-010.log reports/cv-score-xgb-baseline-features-011.log reports/cv-score-xgb-baseline-features-012.log reports/cv-score-xgb-baseline-features-013.log reports/cv-score-xgb-baseline-features-014.log reports/cv-score-xgb-baseline-features-015.log reports/cv-score-xgb-baseline-features-016.log reports/cv-score-xgb-baseline-features-017.log reports/cv-score-xgb-baseline-features-018.log reports/cv-score-xgb-baseline-features-019.log
 
 .PHONY: all-reports
 all-reports: features-baseline-reports reports/cv-score-xgb-features-000.log reports/cv-score-xgb-features-008.log reports/cv-score-xgb-features-015.log reports/cv-score-xgb-features-017.log

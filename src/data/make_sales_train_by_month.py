@@ -1,29 +1,14 @@
-from ..functional import comp, partial
-
 import pandas as pd
-from zipfile import ZipFile
-
-
-def _load_raw(raw_data_path):
-    with ZipFile(raw_data_path, 'r') as datasets_file:
-        return pd.read_csv(datasets_file.open('sales_train.csv'))
-
-
-def _group_by_month(df):
-    df2 = df.groupby(
-        by=['date_block_num', 'shop_id', 'item_id'])['item_cnt_day']\
-            .sum().reset_index()
-    df2.rename(columns={'item_cnt_day': 'item_cnt'}, inplace=True)
-    return df2
-
-
-def _save_result(output_path, df):
-    df.to_parquet(output_path)
 
 
 if __name__ == '__main__':
     import sys
-    raw_data_path = sys.argv[1]
+    sales_train = pd.read_parquet(sys.argv[1])
     output_path = sys.argv[2]
-    comp(partial(_save_result, output_path),
-         _group_by_month)(_load_raw(raw_data_path))
+
+    df = sales_train.groupby(
+        by=['date_block_num', 'shop_id', 'item_id'])['item_cnt_day']\
+        .sum().reset_index()
+    df.rename(columns={'item_cnt_day': 'item_cnt'}, inplace=True)
+
+    df.to_parquet(output_path)
