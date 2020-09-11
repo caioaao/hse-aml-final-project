@@ -3,7 +3,7 @@ import sys
 import pandas as pd
 from tqdm.auto import tqdm
 
-from ..feature_engineering import add_features_deltas
+from . import add_features_deltas
 
 if __name__ == '__main__':
     prices_stats = pd.read_parquet(sys.argv[1])
