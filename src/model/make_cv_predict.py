@@ -17,6 +17,7 @@ if __name__ == '__main__':
     reg = joblib.load(reg_path)
 
     X, y = df_to_X_y(train_set)
+    del train_set
 
     output_dfs = []
     for fold, (train, test) in enumerate(tqdm(cv_splits)):
