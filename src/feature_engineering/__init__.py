@@ -118,4 +118,5 @@ def add_features_deltas(df, feature_cols, windows=[1, 2, 3, 6, 9, 12],
                      + [features_delta(df, feature_cols, window=w,
                                        index_cols=index_cols,
                                        date_col=date_col)
-                        for w in tqdm(windows)])
+                        for w in tqdm(windows)],
+                     axis=1)
