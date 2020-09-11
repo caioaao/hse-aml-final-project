@@ -3,41 +3,39 @@ import pandas as pd
 
 if __name__ == '__main__':
     sales_train = pd.read_parquet(sys.argv[1])
-    train_set = pd.read_parquet(sys.argv[2])
-    categories_meta = pd.read_parquet(sys.argv[3])
-    output_path = sys.argv[4]
+    categories_meta = pd.read_parquet(sys.argv[2])
+    output_path = sys.argv[3]
 
-    df = train_set.merge(categories_meta, on='item_id')
     sales_train = sales_train.merge(categories_meta, on='item_id')
+    df = sales_train[['item_id', 'shop_id', 'category_name',
+                      'date_block_num']].copy()
+    df.drop_duplicates(inplace=True)
 
-    stats_confs = [{'col': 'item_shop_price_median',
-                    'index_cols': ['item_id', 'shop_id']},
-                   {'col': 'cat_price_median',
-                    'index_cols': ['category_name']},
-                   {'col': 'cat_shop_price_median',
-                    'index_cols': ['category_name', 'shop_id']},
-                   {'col': 'item_price_median',
-                    'index_cols': ['item_id']}]
+    stats_confs = [['item_id', 'shop_id'],
+                   ['category_name'],
+                   ['category_name', 'shop_id'],
+                   ['item_id']]
 
-    for conf in stats_confs:
-        idx = conf['index_cols'] + ['date_block_num']
+    for cols in stats_confs:
+        idx = cols + ['date_block_num']
+        feature_col = '%s_price_median' % '_'.join(cols)
+
         stat_df = sales_train.groupby(idx)['item_price']\
                              .median().reset_index()\
-                             .rename(columns={'item_price': conf['col']})
-        df = df.merge(stat_df, on=idx, how='left', sort=False)
+                             .rename(columns={'item_price': feature_col})
+        df = df.merge(stat_df, on=idx, how='outer', sort=False)
 
-    cols_to_imput = ['item_shop_price_median',
-                     'cat_shop_price_median',
-                     'item_price_median']
-    for col in cols_to_imput:
+    idxs_to_imput = [['item_id', 'shop_id'],
+                     ['category_name', 'shop_id'],
+                     ['item_id']]
+    imput_src = 'category_name_price_median'
+    for idxs in idxs_to_imput:
+        col = '%s_price_median' % '_'.join(idxs)
         df.loc[df[col].isnull(), col] = df.loc[df[col].isnull(),
-                                               'cat_price_median']
-    df.fillna(-999, inplace=True)
-    df = df[['item_id', 'shop_id', 'date_block_num',
-             'item_shop_price_median',
-             'cat_price_median',
-             'cat_shop_price_median',
-             'item_price_median']]
+                                               imput_src]
+    df = df[['item_id', 'shop_id', 'date_block_num'] +
+            [col for col in df.columns if col.endswith('_median')]]
 
     print("%s columns: %s" % (output_path, str(df.columns)))
+    print("%s nulls: %s" % (output_path, str(df.isnull().sum() / df.shape[0])))
     df.to_parquet(output_path)
