@@ -16,7 +16,7 @@ if __name__ == '__main__':
     for col in dates_cols:
         feature_col = col.replace('_release_date', '_months_since_launch')
         df[feature_col] = df['date_block_num'] - df[col]
-        df[df[feature_col] <= 0] = -999
+        df.loc[df[feature_col] <= 0, feature_col] = -999
 
     df.drop(columns=dates_cols, inplace=True)  # to avoid a data leak
 

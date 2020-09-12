@@ -65,9 +65,6 @@
 .data/processed/release-dates.parquet: src/data/make_release_dates.py .data/processed/sales-train.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/last-seen-dates.parquet: src/data/make_last_seen_dates.py .data/processed/sales-train.parquet | .data/processed
-	pipenv run scripts/runpy.sh $^ $@
-
 ###############################################################################
 # Feature sets
 ###############################################################################
@@ -144,7 +141,7 @@
 .data/processed/%-features-023.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-021.parquet .data/processed/%-features-022.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-024.parquet: src/data/make_feature_set_024.py .data/processed/%.parquet .data/processed/last-seen-dates.parquet | .data/processed
+.data/processed/%-features-024.parquet: src/data/make_feature_set_024.py .data/processed/%.parquet .data/processed/sales-train.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/processed/%-features-025.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-023.parquet .data/processed/%-features-024.parquet | .data/processed
