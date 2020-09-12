@@ -29,7 +29,8 @@ if __name__ == '__main__':
             month_df['date_block_num'] = month
             months_dfs.append(month_df)
         grp_df = pd.concat(months_dfs, axis=0)
-        df = df.merge(grp_df, on=group + ['date_block_num'], how='left')
+        df = df.merge(grp_df, on=group + ['date_block_num'], how='left',
+                      sort=False)
         df[delta_col] = df['date_block_num'] - df[date_col]
     df.fillna(-999, inplace=True)
 
