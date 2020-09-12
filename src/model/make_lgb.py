@@ -7,7 +7,7 @@ import optuna.integration.lightgbm as optuna_lgb
 import lightgbm as lgb
 
 from .tscv import train_test_split
-from ..feature_engineering import df_to_X_y
+from ..data import df_to_X_y
 
 DEFAULT_PARAMS = {
     "objective": "regression",

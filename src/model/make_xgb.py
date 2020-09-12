@@ -12,7 +12,7 @@ from sklearn.metrics import mean_squared_error
 
 
 from . import tscv
-from ..feature_engineering import df_to_X_y
+from ..data import df_to_X_y
 
 
 MAX_EVALS = 110
@@ -169,7 +169,12 @@ if __name__ == '__main__':
 
     reg = sklearn_regressor(study.best_params, best_ntree_limit)
 
+    del X_train
+    del y_train
     X_train, y_train = df_to_X_y(train_set, window=16)
+    del train_set
+    import time
+    time.sleep(5)
     reg = reg.fit(X_train, y_train)
 
     print(reg)

@@ -2,7 +2,7 @@ import joblib
 import pandas as pd
 import numpy as np
 
-from ..feature_engineering import drop_non_features
+from ..data import drop_non_features
 
 
 if __name__ == '__main__':

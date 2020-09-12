@@ -2,7 +2,7 @@ import joblib
 import pandas as pd
 from tqdm.auto import tqdm
 
-from ..feature_engineering import df_to_X_y
+from ..data import df_to_X_y
 
 
 from . import tscv

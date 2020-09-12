@@ -53,10 +53,10 @@
 .data/processed/price-and-sales-ranks.parquet: src/data/make_ranks_df.py .data/processed/sales-train.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/sales-deltas.parquet: src/feature_engineering/make_sales_deltas.py .data/processed/sales-train.parquet .data/processed/item-categories-metadata.parquet | .data/processed
+.data/processed/sales-deltas.parquet: src/data/make_sales_deltas.py .data/processed/sales-train.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/prices-deltas.parquet: src/feature_engineering/make_prices_deltas.py .data/processed/prices-statistics.parquet | .data/processed
+.data/processed/prices-deltas.parquet: src/data/make_prices_deltas.py .data/processed/prices-statistics.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/processed/revenues-history.parquet: src/data/make_revenue_features.py .data/processed/sales-train.parquet .data/processed/item-categories-metadata.parquet | .data/processed
@@ -72,82 +72,82 @@
 # Feature sets
 ###############################################################################
 
-.data/processed/%-features-000.parquet: src/feature_engineering/make_feature_set_000.py .data/processed/%.parquet | .data/processed
+.data/processed/%-features-000.parquet: src/data/make_feature_set_000.py .data/processed/%.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-001.parquet: src/feature_engineering/make_feature_set_001.py .data/processed/%.parquet .data/processed/date-ids.parquet | .data/processed
+.data/processed/%-features-001.parquet: src/data/make_feature_set_001.py .data/processed/%.parquet .data/processed/date-ids.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-002.parquet: src/feature_engineering/make_feature_set_002.py .data/processed/%.parquet .data/processed/sales-train-by-month.parquet | .data/processed
+.data/processed/%-features-002.parquet: src/data/make_feature_set_002.py .data/processed/%.parquet .data/processed/sales-train-by-month.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-003.parquet: src/feature_engineering/make_feature_set_003.py .data/processed/%.parquet .data/processed/item-categories-metadata.parquet | .data/processed
+.data/processed/%-features-003.parquet: src/data/make_feature_set_003.py .data/processed/%.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-004.parquet: src/feature_engineering/make_feature_set_004.py .data/processed/%.parquet .data/processed/sales-train-by-month.parquet .data/processed/item-categories-metadata.parquet | .data/processed
+.data/processed/%-features-004.parquet: src/data/make_feature_set_004.py .data/processed/%.parquet .data/processed/sales-train-by-month.parquet .data/processed/item-categories-metadata.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-005.parquet: src/feature_engineering/make_feature_set_005.py .data/processed/%.parquet .data/processed/economics-history.parquet | .data/processed
+.data/processed/%-features-005.parquet: src/data/make_feature_set_005.py .data/processed/%.parquet .data/processed/economics-history.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-006.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-000.parquet .data/processed/%-features-001.parquet .data/processed/%-features-002.parquet .data/processed/%-features-003.parquet .data/processed/%-features-004.parquet | .data/processed
+.data/processed/%-features-006.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-000.parquet .data/processed/%-features-001.parquet .data/processed/%-features-002.parquet .data/processed/%-features-003.parquet .data/processed/%-features-004.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-007.parquet: src/feature_engineering/make_feature_set_007.py .data/processed/%-features-002.parquet | .data/processed
+.data/processed/%-features-007.parquet: src/data/make_feature_set_007.py .data/processed/%-features-002.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-008.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-000.parquet .data/processed/%-features-001.parquet .data/processed/%-features-003.parquet .data/processed/%-features-004.parquet .data/processed/%-features-007.parquet | .data/processed
+.data/processed/%-features-008.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-000.parquet .data/processed/%-features-001.parquet .data/processed/%-features-003.parquet .data/processed/%-features-004.parquet .data/processed/%-features-007.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-009.parquet: src/feature_engineering/make_feature_set_009.py .data/processed/%.parquet  .data/processed/item-categories-metadata.parquet .data/processed/prices-statistics.parquet | .data/processed
+.data/processed/%-features-009.parquet: src/data/make_feature_set_009.py .data/processed/%.parquet  .data/processed/item-categories-metadata.parquet .data/processed/prices-statistics.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-010.parquet: src/feature_engineering/make_feature_set_010.py .data/processed/%.parquet  .data/processed/price-and-sales-ranks.parquet | .data/processed
+.data/processed/%-features-010.parquet: src/data/make_feature_set_010.py .data/processed/%.parquet  .data/processed/price-and-sales-ranks.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-011.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-000.parquet .data/processed/%-features-001.parquet .data/processed/%-features-003.parquet .data/processed/%-features-004.parquet .data/processed/%-features-009.parquet .data/processed/%-features-010.parquet | .data/processed
+.data/processed/%-features-011.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-000.parquet .data/processed/%-features-001.parquet .data/processed/%-features-003.parquet .data/processed/%-features-004.parquet .data/processed/%-features-009.parquet .data/processed/%-features-010.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-012.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-004.parquet .data/processed/%-features-007.parquet .data/processed/%-features-009.parquet .data/processed/%-features-010.parquet | .data/processed
+.data/processed/%-features-012.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-004.parquet .data/processed/%-features-007.parquet .data/processed/%-features-009.parquet .data/processed/%-features-010.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-013.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-008.parquet .data/processed/%-features-009.parquet .data/processed/%-features-010.parquet | .data/processed
+.data/processed/%-features-013.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-008.parquet .data/processed/%-features-009.parquet .data/processed/%-features-010.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-014.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-008.parquet .data/processed/%-features-009.parquet | .data/processed
+.data/processed/%-features-014.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-008.parquet .data/processed/%-features-009.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-015.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-008.parquet .data/processed/%-features-010.parquet | .data/processed
+.data/processed/%-features-015.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-008.parquet .data/processed/%-features-010.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-016.parquet: src/feature_engineering/make_feature_set_016.py .data/processed/%.parquet  .data/processed/sales-deltas.parquet | .data/processed
+.data/processed/%-features-016.parquet: src/data/make_feature_set_016.py .data/processed/%.parquet  .data/processed/sales-deltas.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-017.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-013.parquet .data/processed/%-features-016.parquet | .data/processed
+.data/processed/%-features-017.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-013.parquet .data/processed/%-features-016.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-018.parquet: src/feature_engineering/make_feature_set_018.py .data/processed/%.parquet  .data/processed/prices-deltas.parquet | .data/processed
+.data/processed/%-features-018.parquet: src/data/make_feature_set_018.py .data/processed/%.parquet  .data/processed/prices-deltas.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-019.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-017.parquet .data/processed/%-features-018.parquet | .data/processed
+.data/processed/%-features-019.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-017.parquet .data/processed/%-features-018.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-020.parquet: src/feature_engineering/make_feature_set_020.py .data/processed/%.parquet .data/processed/revenues-history.parquet | .data/processed
+.data/processed/%-features-020.parquet: src/data/make_feature_set_020.py .data/processed/%.parquet .data/processed/revenues-history.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-021.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-019.parquet .data/processed/%-features-020.parquet | .data/processed
+.data/processed/%-features-021.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-019.parquet .data/processed/%-features-020.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-022.parquet: src/feature_engineering/make_feature_set_022.py .data/processed/%.parquet .data/processed/release-dates.parquet | .data/processed
+.data/processed/%-features-022.parquet: src/data/make_feature_set_022.py .data/processed/%.parquet .data/processed/release-dates.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-023.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-021.parquet .data/processed/%-features-022.parquet | .data/processed
+.data/processed/%-features-023.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-021.parquet .data/processed/%-features-022.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-024.parquet: src/feature_engineering/make_feature_set_024.py .data/processed/%.parquet .data/processed/last-seen-dates.parquet | .data/processed
+.data/processed/%-features-024.parquet: src/data/make_feature_set_024.py .data/processed/%.parquet .data/processed/last-seen-dates.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-025.parquet: src/feature_engineering/make_combined_feature_set.py .data/processed/%-features-023.parquet .data/processed/%-features-024.parquet | .data/processed
+.data/processed/%-features-025.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-023.parquet .data/processed/%-features-024.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
 ###############################################################################
