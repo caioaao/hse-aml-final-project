@@ -184,6 +184,9 @@ all-submissions: .data/submissions/xgb-features-000.csv .data/submissions/xgb-fe
 .data/model-outputs/cv-xgb-baseline-features-%.parquet: src/model/make_cv_predict.py .data/model/xgb-baseline.model .data/processed/train-set-features-%.parquet | .data/model-outputs
 	pipenv run scripts/runpy.sh $^ $@
 
+.data/model-outputs/cv-lgb-features-%.parquet: src/model/make_cv_predict.py .data/model/lgb-features-%.model .data/processed/train-set-features-%.parquet | .data/model-outputs
+	pipenv run scripts/runpy.sh $^ $@
+
 ###############################################################################
 # Reports
 ###############################################################################
