@@ -4,8 +4,7 @@ import pandas as pd
 
 
 RELEASE_DATE_GROUPS = [['item_id'],
-                       ['item_id', 'shop_id'],
-                       ['shop_id']]
+                       ['item_id', 'shop_id']]
 
 
 if __name__ == '__main__':
