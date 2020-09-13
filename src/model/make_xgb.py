@@ -173,8 +173,7 @@ if __name__ == '__main__':
     del y_train
     X_train, y_train = df_to_X_y(train_set, window=16)
     del train_set
-    import time
-    time.sleep(5)
+
     reg = reg.fit(X_train, y_train)
 
     print(reg)
