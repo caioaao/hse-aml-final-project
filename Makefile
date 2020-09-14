@@ -160,6 +160,9 @@
 .data/model/lgb-features-%.model: src/model/make_lgb.py .data/trials/studies.db .data/processed/train-set-features-%.parquet | .data/model
 	pipenv run scripts/runpy.sh $^ $@
 
+.data/model/linear-model-preprocessor-features-%.model: src/model/make_linear_model_preprocessor.py .data/processed/train-set-features-%.parquet .data/processed/test-set-features-%.parquet | .data/model
+	pipenv run scripts/runpy.sh $^ $@
+
 ###############################################################################
 # Submissions
 ###############################################################################
