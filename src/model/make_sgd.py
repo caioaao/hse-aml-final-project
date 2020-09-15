@@ -65,6 +65,7 @@ def sgd_fit(sgd, X_train, y_train, X_val, y_val, early_stop_rounds=10,
 
         if iter_n - last_visible_improvement > early_stop_rounds:
             break
+    sgd.n_iter_ = last_visible_improvement
     return sgd
 
 

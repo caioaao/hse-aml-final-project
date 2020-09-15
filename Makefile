@@ -163,9 +163,6 @@
 .data/model/linear-model-preprocessor-features-%.model: src/model/make_linear_model_preprocessor.py .data/processed/train-set-features-%.parquet .data/processed/test-set-features-%.parquet | .data/model
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/model/enet-features-%.model: src/model/make_elasticnet.py .data/processed/train-set-features-%.parquet .data/model/linear-model-preprocessor-features-%.model | .data/model
-	pipenv run scripts/runpy.sh $^ $@
-
 .data/model/sgd-features-%.model: src/model/make_sgd.py .data/trials/studies.db .data/processed/train-set-features-%.parquet .data/model/linear-model-preprocessor-features-%.model | .data/model
 	pipenv run scripts/runpy.sh $^ $@
 
@@ -193,9 +190,6 @@ all-submissions: .data/submissions/xgb-features-000.csv .data/submissions/xgb-fe
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/model-outputs/cv-lgb-features-%.parquet: src/model/make_cv_predict.py .data/model/lgb-features-%.model .data/processed/train-set-features-%.parquet | .data/model-outputs
-	pipenv run scripts/runpy.sh $^ $@
-
-.data/model-outputs/cv-enet-features-%.parquet: src/model/make_cv_predict.py .data/model/enet-features-%.model .data/processed/train-set-features-%.parquet | .data/model-outputs
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/model-outputs/cv-sgd-features-%.parquet: src/model/make_cv_predict.py .data/model/sgd-features-%.model .data/processed/train-set-features-%.parquet | .data/model-outputs
