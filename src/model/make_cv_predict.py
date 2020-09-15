@@ -13,7 +13,7 @@ if __name__ == '__main__':
     train_set = pd.read_parquet(sys.argv[2])
     output_path = sys.argv[3]
 
-    cv_splits = tscv.split(train_set['date_block_num'], n=3, window=16)
+    cv_splits = tscv.split(train_set['date_block_num'], n=8, window=16)
     reg = joblib.load(reg_path)
 
     X, y = df_to_X_y(train_set)

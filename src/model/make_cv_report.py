@@ -16,7 +16,7 @@ if __name__ == '__main__':
                         format='%(asctime)-15s %(message)s')
 
     scores = []
-    for fold_id in cv_df['fold_id'].unique():
+    for fold_id in cv_df['fold_id'].unique()[-3:]:
         y_true = cv_df[cv_df['fold_id'] == fold_id]['item_cnt_month'].values
         y_pred = cv_df[cv_df['fold_id'] == fold_id]['oof_preds'].values
         err = mean_squared_error(y_true, np.clip(y_pred, 0, 20), squared=False)
