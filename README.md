@@ -64,6 +64,6 @@ All HPO were done using [optuna](https://optuna.readthedocs.io/en/stable/), and 
 | 002 | XGB | 015 | 0.83572 | 0.97531 |
 | 003 | XGB | 017 | 0.83343 | 0.98392 |
 | 004 | XGB | 025 | 0.82619 | __0.96238__ |
-| 005 | SGD | 025 | 0.90505 | |
+| 005 | SGD | 025 | 0.89283 | |
 
 ### Stacking
