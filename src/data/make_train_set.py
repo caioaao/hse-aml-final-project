@@ -14,7 +14,7 @@ if __name__ == '__main__':
         df['date_block_num'] = m
         return df
 
-    train_set = pd.concat([make_train_set_month(m) for m in range(14, 34)])
+    train_set = pd.concat([make_train_set_month(m) for m in range(9, 34)])
     train_set = train_set.merge(
         sales_by_month, on=['item_id', 'shop_id', 'date_block_num'],
         how='left', sort=False).fillna(0)
