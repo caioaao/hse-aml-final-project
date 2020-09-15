@@ -16,9 +16,8 @@ from ..data import df_to_X_y
 MAX_EVALS = 100
 
 DEFAULT_PARAMS = {
-    'fit_intercept': False,
+    'fit_intercept': True,
 }
-TOL = 0.0001
 
 
 def _clipped_rmse(y, ypred):
@@ -53,7 +52,7 @@ def trial_to_params(trial: optuna.Trial):
 def sgd_fit(sgd, X_train, y_train, X_val, y_val, early_stop_rounds=10,
             tol=0.0001, callback=None, max_iter=200):
     best_loss = np.inf
-    best_iter_n = 0
+    last_visible_improvement = 0
     for iter_n in range(max_iter):
         sgd.partial_fit(X_train, y_train)
         intermediate_value = _clipped_rmse(y_val, sgd.predict(X_val))
@@ -61,10 +60,10 @@ def sgd_fit(sgd, X_train, y_train, X_val, y_val, early_stop_rounds=10,
         if callback:
             callback(sgd, iter_n, intermediate_value)
         if best_loss > intermediate_value + tol:
-            best_iter_n = iter_n
+            last_visible_improvement = iter_n
             best_loss = intermediate_value
 
-        if iter_n - best_iter_n > early_stop_rounds:
+        if iter_n - last_visible_improvement > early_stop_rounds:
             break
     return sgd
 

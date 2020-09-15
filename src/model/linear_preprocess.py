@@ -1,7 +1,8 @@
 import numpy as np
 
-from sklearn.preprocessing import OneHotEncoder, RobustScaler
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
 
 from ..data import get_feature_cols
 
@@ -17,6 +18,9 @@ def make_preprocessor(train_set, test_set):
     num_indexes = [i for i, feature in enumerate(features)
                    if not feature.startswith('f__cat__')]
 
-    return ColumnTransformer(
-        [("onehot", OneHotEncoder(categories=categories), cat_indexes),
-         ("scale", RobustScaler(), num_indexes)])
+    return Pipeline(
+        [('onehot',
+          ColumnTransformer(
+            [("onehot", OneHotEncoder(categories=categories), cat_indexes),
+             ("passthrough", 'passthrough', num_indexes)])),
+         ('scale', StandardScaler(with_mean=False))])

@@ -22,17 +22,20 @@ if __name__ == '__main__':
     del train_set
 
     enet_cv = ElasticNetCV(l1_ratio=[.1, .5, .7, .9, .95, .99, 1],
-                           fit_intercept=False, normalize=False, eps=1e-5,
+                           fit_intercept=True, normalize=False, eps=1e-5,
                            cv=cv_splits, verbose=2, random_state=83232)
 
     reg_cv = make_pipeline(preprocessor, enet_cv)
 
     reg_cv.fit(X_train, y_train)
 
+    joblib.dump(reg_cv, '%s.cv' % output_path)
+
     enet = ElasticNet(l1_ratio=reg_cv.l1_ratio_,
                       fit_intercept=False, normalize=False, eps=1e-5,
                       verbose=2, random_state=83232)
     reg = make_pipeline(preprocessor, enet)
     print(reg)
+    reg.fit(X_train, y_train)
 
     joblib.dump(reg, output_path)
