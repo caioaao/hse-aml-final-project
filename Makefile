@@ -26,7 +26,7 @@
 .data/processed/test-set.parquet: src/data/make_test_set.py .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/train-set.parquet: src/data/make_train_set.py .data/processed/test-set.parquet .data/processed/sales-train-by-month.parquet | .data/processed
+.data/processed/train-set.parquet: src/data/make_train_set_v2.py .data/processed/test-set.parquet .data/processed/sales-train-by-month.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/processed/item-categories-metadata.parquet: src/data/make_item_categories_metadata.py .data/raw/competitive-data-science-predict-future-sales.zip | .data/processed
