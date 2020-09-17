@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     reg = make_reg()
 
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 2:
         train_set = pd.read_parquet(sys.argv[1])
         X, y = df_to_X_y(train_set)
         print("Fitting baseline model")
