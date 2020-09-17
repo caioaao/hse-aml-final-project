@@ -9,8 +9,7 @@ class ClippedOutputRegressor(BaseEstimator, MetaEstimatorMixin,
         self.regressor = regressor
 
     def fit(self, *args, **kwargs):
-        self.regressor_ = clone(self.regressor)
-        self.regressor_.fit(*args, **kwargs)
+        self.regressor_ = clone(self.regressor).fit(*args, **kwargs)
         return self
 
     def predict(self, *args, **kwargs):
