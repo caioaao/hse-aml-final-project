@@ -25,14 +25,6 @@ if __name__ == '__main__':
                              .rename(columns={'item_price': feature_col})
         df = df.merge(stat_df, on=idx, how='outer', sort=False)
 
-    idxs_to_imput = [['item_id', 'shop_id'],
-                     ['category_name', 'shop_id'],
-                     ['item_id']]
-    imput_src = 'category_name_price_median'
-    for idxs in idxs_to_imput:
-        col = '%s_price_median' % '_'.join(idxs)
-        df.loc[df[col].isnull(), col] = df.loc[df[col].isnull(),
-                                               imput_src]
     df = df[['item_id', 'shop_id', 'date_block_num'] +
             [col for col in df.columns if col.endswith('_median')]]
 
