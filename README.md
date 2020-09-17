@@ -80,6 +80,7 @@ We define an experiment as a feature-set + an algorithm. Their evaluation are th
 | 002 | XGB | 015 | 0.83572 | 0.97531 |
 | 003 | XGB | 017 | 0.83343 | 0.98392 |
 | 004 | XGB | 025 | 0.82619 | __0.96238__ |
-| 005 | SGD | 025 | 0.89283 | |
+| 005 | SGD | 025 | 0.89283 | 1.04410 |
+| 006 | LGB | 025 | | 0.96880 |
 
 ### Stacking

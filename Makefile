@@ -176,6 +176,9 @@
 .data/submissions/lgb-features-%.csv: src/submission/make_submission.py .data/model/lgb-features-%.model .data/processed/test-set-features-%.parquet | .data/submissions
 	pipenv run scripts/runpy.sh $^ $@
 
+.data/submissions/sgd-features-%.csv: src/submission/make_submission.py .data/model/sgd-features-%.model .data/processed/test-set-features-%.parquet | .data/submissions
+	pipenv run scripts/runpy.sh $^ $@
+
 .PHONY: all-submissions
 all-submissions: .data/submissions/xgb-features-000.csv .data/submissions/xgb-features-025.log
 
