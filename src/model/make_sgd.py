@@ -85,26 +85,25 @@ def _make_objective(X_train, y_train, X_val, y_val, early_stop_rounds=10):
     return objective
 
 
-if __name__ == '__main__':
-    trials_db_path = sys.argv[1]
-    train_set_path = sys.argv[2]
-    preprocessor = joblib.load(sys.argv[3])
-    output_path = sys.argv[4]
-
+def train_test_sets(train_set_path, preprocessor):
     train_set = pd.read_parquet(train_set_path)
     X_train, y_train, X_val, y_val = tscv.train_test_split(
         *df_to_X_y(train_set),
         date_vec=train_set['date_block_num'].values,
         train_start=16)
-    del train_set
 
     X_train = preprocessor.fit_transform(X_train)
     X_val = preprocessor.transform(X_val)
+    return X_train, y_train, X_val, y_val
 
-    trials_db = 'sqlite:///%s' % trials_db_path
+
+def optimize(trials_db, train_set_path, preprocessor):
     study = optuna.create_study(
         direction='minimize', load_if_exists=True, study_name=output_path,
         storage=trials_db, pruner=optuna.pruners.HyperbandPruner())
+
+    X_train, y_train, X_val, y_val = train_test_sets(train_set_path,
+                                                     preprocessor)
 
     n_trials = MAX_EVALS - len(study.trials)
     if n_trials > 0:
@@ -117,19 +116,26 @@ if __name__ == '__main__':
     sgd = sgd_fit(sgd, X_train, y_train, X_val, y_val, max_iter=1000,
                   early_stop_rounds=50)
     print('Optimal max_iter: %3d' % sgd.n_iter_)
-    del X_train
-    del y_train
-    del X_val
-    del y_val
 
-    X, y = df_to_X_y(pd.read_parquet(train_set_path))
+    return SGDRegressor(**DEFAULT_PARAMS, **study.best_params,
+                        early_stopping=False, max_iter=sgd.n_iter_)
 
-    sgd = SGDRegressor(**DEFAULT_PARAMS, **study.best_params,
-                       early_stopping=False, max_iter=sgd.n_iter_)
+
+if __name__ == '__main__':
+    trials_db_path = sys.argv[1]
+    train_set_path = sys.argv[2]
+    preprocessor = joblib.load(sys.argv[3])
+    output_path = sys.argv[4]
+
+    trials_db = 'sqlite:///%s' % trials_db_path
+
+    sgd = optimize(trials_db, train_set_path, preprocessor)
 
     print('Final estimator: %s' % sgd)
     reg = Pipeline([('pre', preprocessor),
                     ('sgd', sgd)])
+    X, y = df_to_X_y(pd.read_parquet(train_set_path))
+
     print('Fitting final estimator')
     reg.fit(X, y)
     joblib.dump(reg, output_path)
