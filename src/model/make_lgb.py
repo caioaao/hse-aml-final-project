@@ -38,15 +38,18 @@ if __name__ == '__main__':
         load_if_exists=True, study_name=output_path,
         storage=trials_db)
 
-    model = optuna_lgb.train(params, dtrain, valid_sets=[dtrain, dval],
-                             early_stopping_rounds=100, verbose_eval=10,
-                             study=study)
+    tuner = optuna_lgb.LightGBMTuner(params, dtrain, valid_sets=[dtrain, dval],
+                                     early_stopping_rounds=100,
+                                     verbose_eval=10, study=study)
+    tuner.run()
 
-    print('Params: %s' % str(model.params))
-    print('Best iteration: %d' % model.best_iteration)
-
-    reg = lgb.LGBMRegressor(
-        n_estimators=model.best_iteration, **model.params)
+    try:
+        model = tuner.get_best_booster()
+    except ValueError:
+        model = lgb.train(params, dtrain, valid_sets=[dval],
+                          early_stopping_rounds=100,
+                          num_boost_round=1000,
+                          verbose_eval=10)
 
     del X_train
     del y_train
@@ -54,6 +57,14 @@ if __name__ == '__main__':
     del y_val
     del X
     del y
+
+    print('Params: %s' % str(model.params))
+    print('Best iteration: %d' % model.best_iteration)
+
+    final_params = {**model.params,
+                    'num_iterations': model.best_iteration}
+    final_params.pop('early_stopping_round')
+    reg = lgb.LGBMRegressor(**final_params)
 
     X, y = df_to_X_y(train_set, window=16)
     del train_set

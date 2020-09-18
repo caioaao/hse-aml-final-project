@@ -69,13 +69,15 @@ This section contains an explanation of each learning algorithm and the HPO stra
 
 For HPO I used [optuna](https://optuna.readthedocs.io/en/stable/) with the default TPE sampler and a [HyperBand](https://arxiv.org/abs/1603.06560) pruner.
 
-After choosing most of the hyperparameters using Optuna, I find the optimal number of estimators (or boost rounds) by running train with early stopping.
+After choosing most of the hyperparameters using Optuna, I find the optimal number of estimators (or boost rounds) by running train with early stopping. This probably doesn't yield the best result, but I decided to do so anyway to speed up the HPO.
 
 ### Linear Regression
 
 This was done using scikit-learn's [stochastic gradient descent](https://en.wikipedia.org/wiki/Stochastic_gradient_descent) implementation, aka `SGDRegressor`.
 
 Since this is also a gradient descent method, I decided to implement my own train loop so I could take advantage of optuna's hyperband pruner as well. After finding the optimal hyperparameters, I run a second pass on the best configuration with an increased amount of iterations to find the optimal number of iterations for his configuration.
+
+Just like in the XGBoost, doing the optimal number of iterations separate from the other hyperparameters is submoptimal, but it was a trade-off I was willing to take to speed up the process.
 
 For preprocessing, a standard linear model preprocessor was put together, doing one-hot encoding for categorical variables and then scaling the dataset variance to 1 (mean couldn't be scaled as well to preserve the sparseness of the train set matrix).
 
@@ -92,6 +94,6 @@ We define an experiment as a feature-set + an algorithm. Their evaluation are th
 | 000 | XGB | 000 | 1.04264 |  |
 | 004 | XGB | 025 | __0.79638__ | __0.91381__ |
 | 005 | SGD | 025 | | |
-| 006 | LGB | 025 | | |
+| 006 | LGB | 025 | 0.80421 | 0.91941 |
 
 ## Stacking
