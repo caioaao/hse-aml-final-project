@@ -15,7 +15,7 @@ from . import tscv
 from ..data import df_to_X_y
 
 
-MAX_EVALS = 110
+MAX_EVALS = 50
 
 
 DEFAULT_PARAMS = {"n_jobs": -1,
@@ -87,9 +87,7 @@ def _trial_to_params(trial: Trial):
     return params
 
 
-def make_xgb_loss(X_train, y_train, cv_splits, verbose=True):
-    dtrain = xgb.DMatrix(X_train, y_train, missing=-999)
-
+def make_xgb_loss(dtrain, cv_splits, verbose=True):
     def loss(params, callbacks=[]):
         return xgb.cv(
             params, dtrain,
@@ -117,16 +115,11 @@ def _complete_params(params):
     return params
 
 
-def train(params, X_train, y_train):
-    dtrain = xgb.DMatrix(X_train, y_train)
-    return xgb.train(_complete_params(params), dtrain)
-
-
-def best_num_round(params, X, y, cv_splits, verbose=True):
+def best_num_round(params, dall: xgb.DMatrix, cv_splits, verbose=True):
     params = _complete_params(params)
     train_idx, test_idx = cv_splits[-1]
-    dtrain = xgb.DMatrix(X[train_idx], y[train_idx])
-    dtest = xgb.DMatrix(X[test_idx], y[test_idx])
+    dtrain = dall.slice(train_idx)
+    dtest = dall.slice(test_idx)
     bst = xgb.train(params, dtrain, early_stopping_rounds=50,
                     num_boost_round=1000, evals=[(dtrain, 'dtrain'),
                                                  (dtest, 'dtest')],
@@ -146,10 +139,9 @@ if __name__ == '__main__':
     output_path = sys.argv[3]
 
     train_set = pd.read_parquet(train_set_path)
-    X_train, y_train = df_to_X_y(train_set)
     cv_splits = tscv.split(train_set['date_block_num'].values, n=1, window=16)
-
-    objective = make_xgb_objective(make_xgb_loss(X_train, y_train, cv_splits))
+    dtrain = xgb.DMatrix(*df_to_X_y(train_set), missing=-999)
+    del train_set
 
     trials_db = 'sqlite:///%s' % trials_db_path
     study = optuna.create_study(
@@ -158,23 +150,26 @@ if __name__ == '__main__':
 
     n_trials = MAX_EVALS - len(study.trials)
     if n_trials > 0:
+        objective = make_xgb_objective(make_xgb_loss(dtrain, cv_splits))
         try:
             study.optimize(objective, n_trials=n_trials, n_jobs=1,
                            gc_after_trial=True, catch=(xgb.core.XGBoostError,))
         except KeyboardInterrupt:
             print("Canceling optimization step before it finishes")
 
-    best_ntree_limit = best_num_round(study.best_params, X_train, y_train,
-                                      cv_splits)
+    print('Best parameters so far: %s' % study.best_params)
+
+    best_ntree_limit = best_num_round(study.best_params, dtrain, cv_splits)
+    del dtrain
+
+    print('Best n estimators: %d' % best_ntree_limit)
 
     reg = sklearn_regressor(study.best_params, best_ntree_limit)
 
-    del X_train
-    del y_train
-    X_train, y_train = df_to_X_y(train_set, window=16)
-    del train_set
+    print('Fitting sklearn regressor')
+    X, y = df_to_X_y(pd.read_parquet(train_set_path), window=16)
 
-    reg = reg.fit(X_train, y_train)
+    reg = reg.fit(X, y)
 
     print(reg)
     joblib.dump(reg, output_path)
