@@ -87,14 +87,14 @@ def _make_objective(X_train, y_train, X_val, y_val, early_stop_rounds=10):
 
 if __name__ == '__main__':
     trials_db_path = sys.argv[1]
-    train_set = pd.read_parquet(sys.argv[2])
+    train_set_path = sys.argv[2]
     preprocessor = joblib.load(sys.argv[3])
     output_path = sys.argv[4]
 
-    X, y = df_to_X_y(train_set)
-
+    train_set = pd.read_parquet(train_set_path)
     X_train, y_train, X_val, y_val = tscv.train_test_split(
-        X, y, date_vec=train_set['date_block_num'].values,
+        *df_to_X_y(train_set),
+        date_vec=train_set['date_block_num'].values,
         train_start=16)
     del train_set
 
@@ -117,6 +117,12 @@ if __name__ == '__main__':
     sgd = sgd_fit(sgd, X_train, y_train, X_val, y_val, max_iter=1000,
                   early_stop_rounds=50)
     print('Optimal max_iter: %3d' % sgd.n_iter_)
+    del X_train
+    del y_train
+    del X_val
+    del y_val
+
+    X, y = df_to_X_y(pd.read_parquet(train_set_path))
 
     sgd = SGDRegressor(**DEFAULT_PARAMS, **study.best_params,
                        early_stopping=False, max_iter=sgd.n_iter_)
