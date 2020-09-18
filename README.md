@@ -89,9 +89,9 @@ We define an experiment as a feature-set + an algorithm. Their evaluation are th
 
 | ID | Algorithm | Feature set | Validation Score | Public LB score |
 | -- | -- | -- | -- | -- |
-| 000 | XGB | 000 | 1.04264 | 1.18194 |
-| 004 | XGB | 025 | __0.82619__ | __0.96238__ |
-| 005 | SGD | 025 | 0.89283 | 1.04410 |
-| 006 | LGB | 025 | | 0.96880 |
+| 000 | XGB | 000 | 1.04264 |  |
+| 004 | XGB | 025 | __0.79638__ | __0.91381__ |
+| 005 | SGD | 025 | | |
+| 006 | LGB | 025 | | |
 
 ## Stacking
