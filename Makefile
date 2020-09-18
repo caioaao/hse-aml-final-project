@@ -102,12 +102,6 @@
 .data/processed/%-features-010.parquet: src/data/make_feature_set_010.py .data/processed/%.parquet  .data/processed/price-and-sales-ranks.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/%-features-011.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-000.parquet .data/processed/%-features-001.parquet .data/processed/%-features-003.parquet .data/processed/%-features-004.parquet .data/processed/%-features-009.parquet .data/processed/%-features-010.parquet | .data/processed
-	pipenv run scripts/runpy.sh $^ $@
-
-.data/processed/%-features-012.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-004.parquet .data/processed/%-features-007.parquet .data/processed/%-features-009.parquet .data/processed/%-features-010.parquet | .data/processed
-	pipenv run scripts/runpy.sh $^ $@
-
 .data/processed/%-features-013.parquet: src/data/make_combined_feature_set.py .data/processed/%-features-008.parquet .data/processed/%-features-009.parquet .data/processed/%-features-010.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
@@ -212,7 +206,7 @@ reports/cv-score-%.log: src/model/make_cv_report.py .data/model-outputs/cv-%.par
 	pipenv run scripts/runpy.sh $^ $@
 
 .PHONY: features-baseline-reports
-features-baseline-reports: reports/cv-score-xgb-baseline-features-000.log reports/cv-score-xgb-baseline-features-001.log reports/cv-score-xgb-baseline-features-002.log reports/cv-score-xgb-baseline-features-003.log reports/cv-score-xgb-baseline-features-004.log reports/cv-score-xgb-baseline-features-005.log reports/cv-score-xgb-baseline-features-006.log reports/cv-score-xgb-baseline-features-007.log reports/cv-score-xgb-baseline-features-008.log reports/cv-score-xgb-baseline-features-009.log reports/cv-score-xgb-baseline-features-010.log reports/cv-score-xgb-baseline-features-011.log reports/cv-score-xgb-baseline-features-012.log reports/cv-score-xgb-baseline-features-013.log reports/cv-score-xgb-baseline-features-014.log reports/cv-score-xgb-baseline-features-015.log reports/cv-score-xgb-baseline-features-016.log reports/cv-score-xgb-baseline-features-017.log reports/cv-score-xgb-baseline-features-018.log reports/cv-score-xgb-baseline-features-019.log reports/cv-score-xgb-baseline-features-020.log reports/cv-score-xgb-baseline-features-021.log reports/cv-score-xgb-baseline-features-022.log reports/cv-score-xgb-baseline-features-023.log reports/cv-score-xgb-baseline-features-024.log reports/cv-score-xgb-baseline-features-025.log
+features-baseline-reports: reports/cv-score-xgb-baseline-features-000.log reports/cv-score-xgb-baseline-features-001.log reports/cv-score-xgb-baseline-features-002.log reports/cv-score-xgb-baseline-features-003.log reports/cv-score-xgb-baseline-features-004.log reports/cv-score-xgb-baseline-features-005.log reports/cv-score-xgb-baseline-features-006.log reports/cv-score-xgb-baseline-features-007.log reports/cv-score-xgb-baseline-features-008.log reports/cv-score-xgb-baseline-features-009.log reports/cv-score-xgb-baseline-features-010.log reports/cv-score-xgb-baseline-features-013.log reports/cv-score-xgb-baseline-features-014.log reports/cv-score-xgb-baseline-features-015.log reports/cv-score-xgb-baseline-features-016.log reports/cv-score-xgb-baseline-features-017.log reports/cv-score-xgb-baseline-features-018.log reports/cv-score-xgb-baseline-features-019.log reports/cv-score-xgb-baseline-features-020.log reports/cv-score-xgb-baseline-features-021.log reports/cv-score-xgb-baseline-features-022.log reports/cv-score-xgb-baseline-features-023.log reports/cv-score-xgb-baseline-features-024.log reports/cv-score-xgb-baseline-features-025.log
 
 .PHONY: all-reports
 all-reports: features-baseline-reports reports/cv-score-xgb-features-000.log reports/cv-score-xgb-features-025.log reports/cv-score-sgd-features-025.log reports/cv-score-lgb-features-025.log
