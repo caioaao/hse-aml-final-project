@@ -93,7 +93,7 @@ def make_xgb_loss(dtrain, cv_splits, verbose=True):
             params, dtrain,
             callbacks=callbacks,
             folds=cv_splits, verbose_eval=verbose,
-            feval=_xgb_feval, maximize=False, num_boost_round=1000,
+            feval=_xgb_feval, maximize=False, num_boost_round=500,
             early_stopping_rounds=10
         )['test-clipped-rmse-mean'].min()
 
@@ -121,15 +121,17 @@ def best_num_round(params, dall: xgb.DMatrix, cv_splits, verbose=True):
     dtrain = dall.slice(train_idx)
     dtest = dall.slice(test_idx)
     bst = xgb.train(params, dtrain, early_stopping_rounds=50,
-                    num_boost_round=1000, evals=[(dtrain, 'dtrain'),
-                                                 (dtest, 'dtest')],
+                    num_boost_round=500, evals=[(dtrain, 'dtrain'),
+                                                (dtest, 'dtest')],
                     feval=_xgb_feval, verbose_eval=verbose)
     return bst.best_ntree_limit
 
 
-def sklearn_regressor(params, num_round):
-    return XGBRegressor(n_estimators=num_round, missing=-999,
-                        **_complete_params(params))
+def sklearn_regressor(booster, params, num_round):
+    reg = XGBRegressor(n_estimators=num_round, missing=-999,
+                       **_complete_params(params))
+    reg._Booster = booster
+    return reg
 
 
 if __name__ == '__main__':
@@ -160,16 +162,14 @@ if __name__ == '__main__':
     print('Best parameters so far: %s' % study.best_params)
 
     best_ntree_limit = best_num_round(study.best_params, dtrain, cv_splits)
-    del dtrain
 
     print('Best n estimators: %d' % best_ntree_limit)
 
-    reg = sklearn_regressor(study.best_params, best_ntree_limit)
+    print('Fitting final regressor')
+    booster = xgb.train(_complete_params(study.best_params), dtrain,
+                        num_boost_round=best_ntree_limit)
 
-    print('Fitting sklearn regressor')
-    X, y = df_to_X_y(pd.read_parquet(train_set_path), window=16)
-
-    reg = reg.fit(X, y)
-
+    reg = sklearn_regressor(booster, study.best_params,
+                            best_ntree_limit)
     print(reg)
     joblib.dump(reg, output_path)
