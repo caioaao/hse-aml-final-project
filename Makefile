@@ -202,6 +202,13 @@ all-submissions: .data/submissions/xgb-features-025.csv .data/submissions/sgd-fe
 	pipenv run scripts/runpy.sh $^ $@
 
 ###############################################################################
+# Stacking
+###############################################################################
+
+.data/processed/layer2-train-set-features-%.parquet: src/model/make_stacked_features.py .data/model-outputs/cv-xgb-features-%.parquet .data/model-outputs/cv-lgb-features-%.parquet | .data/processed
+	pipenv run scripts/runpy.sh $^ $@
+
+###############################################################################
 # Reports
 ###############################################################################
 
