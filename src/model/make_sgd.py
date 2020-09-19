@@ -1,3 +1,4 @@
+import gc
 import sys
 
 from sklearn.linear_model import SGDRegressor
@@ -13,7 +14,7 @@ from . import tscv
 from ..data import df_to_X_y
 
 
-MAX_EVALS = 100
+MAX_EVALS = 80
 
 DEFAULT_PARAMS = {
     'fit_intercept': True,
@@ -52,7 +53,7 @@ def trial_to_params(trial: optuna.Trial):
 def sgd_fit(sgd, X_train, y_train, X_val, y_val, early_stop_rounds=10,
             tol=0.0001, callback=None, max_iter=200):
     best_loss = np.inf
-    last_visible_improvement = 0
+    last_visible_improvement = 1
     for iter_n in range(max_iter):
         sgd.partial_fit(X_train, y_train)
         intermediate_value = _clipped_rmse(y_val, sgd.predict(X_val))
@@ -60,7 +61,7 @@ def sgd_fit(sgd, X_train, y_train, X_val, y_val, early_stop_rounds=10,
         if callback:
             callback(sgd, iter_n, intermediate_value)
         if best_loss > intermediate_value + tol:
-            last_visible_improvement = iter_n
+            last_visible_improvement = iter_n + 1
             best_loss = intermediate_value
 
         if iter_n - last_visible_improvement > early_stop_rounds:
@@ -114,7 +115,7 @@ def optimize(trials_db, train_set_path, preprocessor):
     sgd = SGDRegressor(**DEFAULT_PARAMS, **study.best_params)
     print('Finding optimal max_iter')
     sgd = sgd_fit(sgd, X_train, y_train, X_val, y_val, max_iter=1000,
-                  early_stop_rounds=50)
+                  early_stop_rounds=50, tol=0.000001)
     print('Optimal max_iter: %3d' % sgd.n_iter_)
 
     return SGDRegressor(**DEFAULT_PARAMS, **study.best_params,
@@ -134,8 +135,11 @@ if __name__ == '__main__':
     print('Final estimator: %s' % sgd)
     reg = Pipeline([('pre', preprocessor),
                     ('sgd', sgd)])
+
     X, y = df_to_X_y(pd.read_parquet(train_set_path))
 
+    X = preprocessor.fit_transform(X)
+
     print('Fitting final estimator')
-    reg.fit(X, y)
+    sgd.fit(X, y)
     joblib.dump(reg, output_path)
