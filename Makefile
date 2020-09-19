@@ -151,32 +151,23 @@
 .data/model/xgb-baseline-features-%.model: src/model/make_xgb_baseline.py .data/processed/train-set-features-%.parquet | .data/model
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/model/xgb-features-%.model: src/model/make_xgb.py .data/trials/studies.db .data/processed/train-set-features-%.parquet | .data/model
-	pipenv run scripts/runpy.sh $^ $@
+.data/model/xgb-features-%.model: src/model/make_xgb.py .data/processed/train-set-features-%.parquet | .data/model .data/trials/studies.db
+	pipenv run scripts/runpy.sh $^ .data/trials/studies.db $@
 
-.data/model/lgb-features-%.model: src/model/make_lgb.py .data/trials/studies.db .data/processed/train-set-features-%.parquet | .data/model
-	pipenv run scripts/runpy.sh $^ $@
+.data/model/lgb-features-%.model: src/model/make_lgb.py .data/processed/train-set-features-%.parquet | .data/model .data/trials/studies.db
+	pipenv run scripts/runpy.sh $^ .data/trials/studies.db $@
 
 .data/model/linear-model-preprocessor-features-%.model: src/model/make_linear_model_preprocessor.py .data/processed/train-set-features-%.parquet .data/processed/test-set-features-%.parquet | .data/model
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/model/sgd-features-%.model: src/model/make_sgd.py .data/trials/studies.db .data/processed/train-set-features-%.parquet .data/model/linear-model-preprocessor-features-%.model | .data/model
-	pipenv run scripts/runpy.sh $^ $@
+.data/model/sgd-features-%.model: src/model/make_sgd.py .data/processed/train-set-features-%.parquet .data/model/linear-model-preprocessor-features-%.model | .data/model .data/trials/studies.db
+	pipenv run scripts/runpy.sh $^ .data/trials/studies.db $@
 
 ###############################################################################
 # Submissions
 ###############################################################################
 
-.data/submissions/xgb-features-%.csv: src/submission/make_submission.py .data/model/xgb-features-%.model .data/processed/test-set-features-%.parquet | .data/submissions
-	pipenv run scripts/runpy.sh $^ $@
-
-.data/submissions/xgb-baseline-features-%.csv: src/submission/make_submission.py .data/model/xgb-baseline-features-%.model .data/processed/test-set-features-%.parquet | .data/submissions
-	pipenv run scripts/runpy.sh $^ $@
-
-.data/submissions/lgb-features-%.csv: src/submission/make_submission.py .data/model/lgb-features-%.model .data/processed/test-set-features-%.parquet | .data/submissions
-	pipenv run scripts/runpy.sh $^ $@
-
-.data/submissions/sgd-features-%.csv: src/submission/make_submission.py .data/model/sgd-features-%.model .data/processed/test-set-features-%.parquet | .data/submissions
+.data/submissions/%.csv: src/submission/make_submission.py .data/model-outputs/preds-%.parquet | .data/submissions
 	pipenv run scripts/runpy.sh $^ $@
 
 .PHONY: all-submissions
@@ -196,6 +187,18 @@ all-submissions: .data/submissions/xgb-features-025.csv .data/submissions/sgd-fe
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/model-outputs/cv-sgd-features-%.parquet: src/model/make_cv_predict.py .data/model/sgd-features-%.model .data/processed/train-set-features-%.parquet | .data/model-outputs
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/model-outputs/preds-xgb-features-%.parquet: src/model/make_preds.py .data/model/xgb-features-%.model .data/processed/test-set-features-%.parquet | .data/model-outputs
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/model-outputs/preds-xgb-baseline-features-%.parquet: src/model/make_preds.py .data/model/xgb-baseline-features-%.model .data/processed/test-set-features-%.parquet | .data/model-outputs
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/model-outputs/preds-lgb-features-%.parquet: src/model/make_preds.py .data/model/lgb-features-%.model .data/processed/test-set-features-%.parquet | .data/model-outputs
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/model-outputs/preds-sgd-features-%.parquet: src/model/make_preds.py .data/model/sgd-features-%.model .data/processed/test-set-features-%.parquet | .data/model-outputs
 	pipenv run scripts/runpy.sh $^ $@
 
 ###############################################################################

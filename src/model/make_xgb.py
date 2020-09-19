@@ -136,8 +136,8 @@ def sklearn_regressor(booster, params, num_round):
 
 if __name__ == '__main__':
     import sys
-    trials_db_path = sys.argv[1]
-    train_set_path = sys.argv[2]
+    train_set_path = sys.argv[1]
+    trials_db_path = sys.argv[2]
     output_path = sys.argv[3]
 
     train_set = pd.read_parquet(train_set_path)

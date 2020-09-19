@@ -18,8 +18,8 @@ DEFAULT_PARAMS = {
 }
 
 if __name__ == '__main__':
-    trials_db_path = sys.argv[1]
-    train_set = pd.read_parquet(sys.argv[2])
+    train_set = pd.read_parquet(sys.argv[1])
+    trials_db_path = sys.argv[2]
     output_path = sys.argv[3]
 
     trials_db = 'sqlite:///%s' % trials_db_path

@@ -122,9 +122,9 @@ def optimize(trials_db, train_set_path, preprocessor):
 
 
 if __name__ == '__main__':
-    trials_db_path = sys.argv[1]
-    train_set_path = sys.argv[2]
-    preprocessor = joblib.load(sys.argv[3])
+    train_set_path = sys.argv[1]
+    preprocessor = joblib.load(sys.argv[2])
+    trials_db_path = sys.argv[3]
     output_path = sys.argv[4]
 
     trials_db = 'sqlite:///%s' % trials_db_path
