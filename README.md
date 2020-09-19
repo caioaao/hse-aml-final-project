@@ -93,7 +93,15 @@ We define an experiment as a feature-set + an algorithm. Their evaluation are th
 | -- | -- | -- | -- | -- |
 | 000 | XGB | 000 | 1.04264 |  |
 | 004 | XGB | 025 | __0.79638__ | __0.91381__ |
-| 005 | SGD | 025 | | |
 | 006 | LGB | 025 | 0.80421 | 0.91941 |
 
 ## Stacking
+
+For stacking I created cross-validation predictions for the last 8 months in the train set using a rolling window of 16 months. For instance, train on months 14 to 30 and generate predictions to month 31, then train on months 15 to 31 and generate predictions to month 32, etc.
+
+After that I used this to train the estimator on the second layer. For validation score I trained on the first 7 months and predicted on the 8th.
+
+| ID | Layer 0 IDs | Meta Estimator | Validation Score | Public LB Score |
+| -- | -- | -- | -- |
+| 0 | 004, 006 | SGD | __0.77996__ | __0.91197__ |
+| 1 | 004, 006 | XGB (small) | 0.78051 | 0.91361 |

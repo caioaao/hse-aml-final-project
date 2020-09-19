@@ -154,6 +154,9 @@
 .data/model/xgb-features-%.model: src/model/make_xgb.py .data/processed/train-set-features-%.parquet | .data/model .data/trials/studies.db
 	pipenv run scripts/runpy.sh $^ .data/trials/studies.db $@
 
+.data/model/xgb-small-features-%.model: src/model/make_xgb_small.py .data/processed/train-set-features-%.parquet | .data/model .data/trials/studies.db
+	pipenv run scripts/runpy.sh $^ .data/trials/studies.db $@
+
 .data/model/lgb-features-%.model: src/model/make_lgb.py .data/processed/train-set-features-%.parquet | .data/model .data/trials/studies.db
 	pipenv run scripts/runpy.sh $^ .data/trials/studies.db $@
 
@@ -190,6 +193,9 @@ all-submissions: .data/submissions/xgb-features-025.csv .data/submissions/sgd-fe
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/model-outputs/preds-xgb-features-%.parquet: src/model/make_preds.py .data/model/xgb-features-%.model .data/processed/test-set-features-%.parquet | .data/model-outputs
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/model-outputs/preds-xgb-small-features-%.parquet: src/model/make_preds.py .data/model/xgb-small-features-%.model .data/processed/test-set-features-%.parquet | .data/model-outputs
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/model-outputs/preds-xgb-baseline-features-%.parquet: src/model/make_preds.py .data/model/xgb-baseline-features-%.model .data/processed/test-set-features-%.parquet | .data/model-outputs
