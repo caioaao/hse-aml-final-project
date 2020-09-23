@@ -15,3 +15,7 @@ def comp(*funcs):
 
 def partial(f, *args):
     return lambda *rest_args: f(*(args + rest_args))
+
+
+def pipe(x, *funcs):
+    return comp(*reversed(funcs))(x)
