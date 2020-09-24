@@ -34,30 +34,30 @@ OBS: Best score is in bold
 
 | ID | Description | Baseline validation score |
 | -- | -- | -- |
-| 000 | baseline: item ids, shop ids, date block num | 1.06215 |
+| 000 | baseline: shop ids, date block num | 1.08053 |
 | 001 | month number, year number | 1.09704 |
 | 002 | lagged item counts | 0.88733 |
 | 003 | item categories metadata | 1.03844 |
 | 004 | target encoding using `item_id`, `shop_id`, `category_name`, and `subcategory_name`  | 0.83296 |
 | 005 | external indicators: RUB to USD/CNY/EUR conversions, MOEX (Moscow Exchange) index (lagged and same month values) | 1.09703 |
-| 006 | 000 + 001 + 002 + 003 + 004 | 0.82393 |
+| 006 | 000 + 001 + 002 + 003 + 004 | 0.82067 |
 | 007 | 002 after feature selection | 0.88639 |
-| 008 | 000 + 001 + 003 + 004 + 007 | 0.82492 |
-| 009 | Median prices for item, item+shop, category, shop+category | 1.32087 |
+| 008 | 000 + 001 + 003 + 004 + 007 | 0.81741 |
+| 009 | Median prices for item, item+shop, category, shop+category | 1.11636 |
 | 010 | Lagged ranks for item price and item cnt over item, category, shop+category | 0.91049 |
-| 013 | 008 + 009 + 010 | 0.81898 |
-| 014 | 008 + 009 | 0.82728 |
-| 015 | 008 + 010 | 0.81816 |
+| 013 | 008 + 009 + 010 | 0.81455 |
+| 014 | 008 + 009 | 0.81981 |
+| 015 | 008 + 010 | 0.81114 |
 | 016 | deltas for item sales | 0.89988 |
-| 017 | 015 + 016 | 0.82299 |
+| 017 | 015 + 016 | 0.81726 |
 | 018 | deltas for item prices | 1.21004 |
-| 019 | 017 + 018 | 0.82063 |
+| 019 | 017 + 018 | 0.82302 |
 | 020 | revenue and sales / price | 0.88878 |
-| 021 | 019 + 020 | 0.82286 |
+| 021 | 019 + 020 | 0.81892 |
 | 022 | Release dates for item, item+shop, shop | 1.06677 |
-| 023 | 021 + 022 | 0.81718 |
+| 023 | 021 + 022 | 0.81233 |
 | 024 | Months since last seen for item, item+shop | 1.04692 |
-| 025 | 023 + 024 | __0.80632__ |
+| 025 | 023 + 024 | __0.80703__ |
 
 By comparing the baseline validation score I was able to choose feature sets to mix and match until I got to the dataset I used for the final solution: 025.
 
@@ -96,8 +96,8 @@ We define an experiment as a feature-set + an algorithm. Their evaluation are th
 | ID | Algorithm | Feature set | Validation Score | Public LB score |
 | -- | -- | -- | -- | -- |
 | 000 | XGB | 000 | 1.04264 |  |
-| 004 | XGB | 025 | __0.79638__ | __0.91381__ |
-| 006 | LGB | 025 | 0.80421 | 0.91941 |
+| 004 | XGB | 025 | __0.79191__ | __0.91197__ |
+| 006 | LGB | 025 | 0.79357 | 0.91941 |
 
 ## Stacking
 
