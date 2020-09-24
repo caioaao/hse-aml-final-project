@@ -1,4 +1,3 @@
-import gc
 import sys
 
 from sklearn.linear_model import SGDRegressor

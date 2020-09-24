@@ -85,6 +85,10 @@ For preprocessing, a standard linear model preprocessor was put together, doing 
 
 Used with Optuna for HPO. Optuna's LGBM integration was great since it implements the [stepwise algorithm](https://medium.com/optuna/lightgbm-tuner-new-optuna-integration-for-hyperparameter-optimization-8b7095e99258) paired with random search. It was still slower than the random search for XGBoost and SGD, but the results were good.
 
+### Feed-Forward Neural Network
+
+I really wanted a quick win here, so I just used [this rules of thumb](https://towardsdatascience.com/17-rules-of-thumb-for-building-a-neural-network-93356f9930af) to get a decent score. The preprocessor is the same as SGD.
+
 ## Experiments
 
 We define an experiment as a feature-set + an algorithm. Their evaluation are the validation score and the public LB score (also our generalization score). Since our amount of submissions is limited I didn't send every result to the competition and used my validation score to choose the ones I submitted.

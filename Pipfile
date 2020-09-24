@@ -18,6 +18,8 @@ lightgbm = "*"
 forex-python = "*"
 yfinance = "*"
 pyarrow = "*"
+keras = "*"
+torch = "*"
 
 [requires]
 python_version = "3.8"

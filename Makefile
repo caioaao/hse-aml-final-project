@@ -166,6 +166,12 @@
 .data/model/sgd-features-%.model: src/model/make_sgd.py .data/processed/train-set-features-%.parquet .data/model/linear-model-preprocessor-features-%.model | .data/model .data/trials/studies.db
 	pipenv run scripts/runpy.sh $^ .data/trials/studies.db $@
 
+.data/model/mlp-features-%.model: src/model/make_mlp.py .data/processed/train-set-features-%.parquet .data/model/linear-model-preprocessor-features-%.model | .data/model
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/model/rf-features-%.model: src/model/make_rf.py .data/processed/train-set-features-%.parquet | .data/model .data/trials/studies.db
+	pipenv run scripts/runpy.sh $^ .data/trials/studies.db $@
+
 ###############################################################################
 # Submissions
 ###############################################################################
@@ -190,6 +196,9 @@ all-submissions: .data/submissions/xgb-features-025.csv .data/submissions/sgd-fe
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/model-outputs/cv-sgd-features-%.parquet: src/model/make_cv_predict.py .data/model/sgd-features-%.model .data/processed/train-set-features-%.parquet | .data/model-outputs
+	pipenv run scripts/runpy.sh $^ $@
+
+.data/model-outputs/cv-mlp-features-%.parquet: src/model/make_cv_predict.py .data/model/mlp-features-%.model .data/processed/train-set-features-%.parquet | .data/model-outputs
 	pipenv run scripts/runpy.sh $^ $@
 
 .data/model-outputs/preds-xgb-features-%.parquet: src/model/make_preds.py .data/model/xgb-features-%.model .data/processed/test-set-features-%.parquet | .data/model-outputs
