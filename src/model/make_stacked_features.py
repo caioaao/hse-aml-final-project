@@ -36,4 +36,6 @@ if __name__ == '__main__':
                          if col.startswith('oof_preds')],
                     inplace=True)
 
+    print(df.columns)
+
     df.to_parquet(output_path)

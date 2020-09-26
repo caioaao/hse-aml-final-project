@@ -220,10 +220,10 @@ all-submissions: .data/submissions/xgb-features-025.csv .data/submissions/sgd-fe
 # Stacking
 ###############################################################################
 
-.data/processed/train-set-features-layer2-%.parquet: src/model/make_stacked_features.py .data/model-outputs/cv-xgb-features-%.parquet .data/model-outputs/cv-lgb-features-%.parquet | .data/processed
+.data/processed/train-set-features-layer2-%.parquet: src/model/make_stacked_features.py .data/model-outputs/cv-xgb-features-%.parquet .data/model-outputs/cv-lgb-features-%.parquet .data/model-outputs/cv-mlp-features-%.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
-.data/processed/test-set-features-layer2-%.parquet: src/model/make_stacked_test_features.py .data/model-outputs/preds-xgb-features-%.parquet .data/model-outputs/preds-lgb-features-%.parquet | .data/processed
+.data/processed/test-set-features-layer2-%.parquet: src/model/make_stacked_test_features.py .data/model-outputs/preds-xgb-features-%.parquet .data/model-outputs/preds-lgb-features-%.parquet .data/model-outputs/preds-mlp-features-%.parquet | .data/processed
 	pipenv run scripts/runpy.sh $^ $@
 
 ###############################################################################

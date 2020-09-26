@@ -21,4 +21,6 @@ if __name__ == '__main__':
     add_as_features(df, [col for col in df.columns if col.startswith('pred_')],
                     inplace=True)
 
+    print(df.columns)
+
     df.to_parquet(output_path)
