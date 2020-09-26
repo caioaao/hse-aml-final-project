@@ -20,7 +20,8 @@ def optimize_n_epochs(train_set_path, preprocessor):
     del train_set
 
     print('Finding optimal number of epochs')
-    _, n_epochs = early_stopping_fit(MLPRegressor(preprocessor=preprocessor),
+    _, n_epochs = early_stopping_fit(MLPRegressor(preprocessor=preprocessor,
+                                                  batch_size=128000),
                                      X_train, y_train, X_val, y_val,
                                      max_iter=50)
 
@@ -37,7 +38,8 @@ if __name__ == '__main__':
     n_epochs = optimize_n_epochs(train_set_path, preprocessor)
 
     print('Building final estimator')
-    mlp = MLPRegressor(preprocessor=preprocessor, n_epochs=n_epochs)
+    mlp = MLPRegressor(preprocessor=preprocessor, n_epochs=n_epochs,
+                       batch_size=128000)
 
     print('Loading dataset')
     X, y = df_to_X_y(pd.read_parquet(train_set_path), window=16)

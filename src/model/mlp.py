@@ -3,7 +3,7 @@ import torch.optim as optim
 import torch.nn.functional as nn_f
 from sklearn.base import (BaseEstimator, RegressorMixin, MetaEstimatorMixin)
 import torch
-from torch.utils.data import DataLoader
+import numpy as np
 
 
 class MLP(nn.Module):
@@ -19,6 +19,55 @@ class MLP(nn.Module):
         return self.fc3(x)
 
 
+class FastTensorDataLoader:
+    """
+    A DataLoader-like object for a set of tensors that can be much faster than
+    TensorDataset + DataLoader because dataloader grabs individual indices of
+    the dataset and calls cat (slow).
+    Source: https://discuss.pytorch.org/t/dataloader-much-slower-than-manual-batching/27014/6
+    """
+
+    def __init__(self, dataset, batch_size=32, shuffle=False):
+        """
+        Initialize a FastTensorDataLoader.
+        :param *tensors: tensors to store. Must have the same length @ dim 0.
+        :param batch_size: batch size to load.
+        :param shuffle: if True, shuffle the data *in-place* whenever an
+            iterator is created out of this object.
+        :returns: A FastTensorDataLoader.
+        """
+        self.dataset = dataset
+
+        self.dataset_len = len(self.dataset)
+        self.batch_size = batch_size
+        self.shuffle = shuffle
+
+        # Calculate # batches
+        n_batches, remainder = divmod(self.dataset_len, self.batch_size)
+        if remainder > 0:
+            n_batches += 1
+        self.n_batches = n_batches
+
+    def __iter__(self):
+        if self.shuffle:
+            self.indexes = np.random.permutation(self.dataset_len)
+        else:
+            self.indexes = np.arange(self.dataset_len)
+        self.i = 0
+        return self
+
+    def __next__(self):
+        if self.i >= self.dataset_len:
+            raise StopIteration
+        batch_inds = self.indexes[self.i:self.i+self.batch_size]
+        batch = self.dataset[batch_inds]
+        self.i += self.batch_size
+        return batch
+
+    def __len__(self):
+        return self.n_batches
+
+
 class PreprocessedDataset(torch.utils.data.Dataset):
     def __init__(self, X, y, preprocessor=None):
         self.X = X
@@ -26,7 +75,6 @@ class PreprocessedDataset(torch.utils.data.Dataset):
         self.preprocessor = preprocessor
 
     def __getitem__(self, index):
-        index = [index]
         Xt = self.preprocessor.transform(self.X[index, :]).todense()
         yt = self.y[index]
         return torch.from_numpy(Xt), torch.from_numpy(yt)
@@ -60,9 +108,8 @@ class MLPRegressor(BaseEstimator, RegressorMixin, MetaEstimatorMixin):
 
         acc_loss = 0.0
         dataset = PreprocessedDataset(X, y, preprocessor=self.preprocessor)
-        loader = DataLoader(dataset, batch_size=self.batch_size,
-                            pin_memory=True,
-                            num_workers=10)
+        loader = FastTensorDataLoader(
+            dataset, batch_size=self.batch_size)
         for inp, target in loader:
             inp = inp.to('cuda', torch.float, non_blocking=True)
             target = target.to('cuda', torch.float, non_blocking=True)
