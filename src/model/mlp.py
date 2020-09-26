@@ -52,4 +52,4 @@ class MLPRegressor(BaseEstimator, RegressorMixin, MetaEstimatorMixin):
         return self
 
     def predict(self, X):
-        return self._predict(X).to('cpu').numpy()
+        return self._predict(X).to('cpu').detach().numpy().reshape(-1)

@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     print('Building final estimator')
 
-    mlp = MLPRegressor(preprocessor=preprocessor, batch_size=1024)
+    mlp = MLPRegressor(preprocessor=preprocessor, batch_size=1024, n_epochs=20)
 
     print('Fitting final estimator')
     mlp.fit(X, y)
