@@ -3,6 +3,7 @@ import torch.optim as optim
 import torch.nn.functional as nn_f
 from sklearn.base import (BaseEstimator, RegressorMixin, MetaEstimatorMixin)
 import torch
+from torch.utils.data import DataLoader
 
 
 class MLP(nn.Module):
@@ -18,16 +19,27 @@ class MLP(nn.Module):
         return self.fc3(x)
 
 
+class PreprocessedDataset(torch.utils.data.Dataset):
+    def __init__(self, X, y, preprocessor=None):
+        self.X = X
+        self.y = y
+        self.preprocessor = preprocessor
+
+    def __getitem__(self, index):
+        index = [index]
+        Xt = self.preprocessor.transform(self.X[index, :]).todense()
+        yt = self.y[index]
+        return torch.from_numpy(Xt), torch.from_numpy(yt)
+
+    def __len__(self):
+        return self.X.shape[0]
+
+
 class MLPRegressor(BaseEstimator, RegressorMixin, MetaEstimatorMixin):
     def __init__(self, preprocessor=None, n_epochs=2, batch_size=128):
         self.n_epochs = n_epochs
         self.batch_size = batch_size
         self.preprocessor = preprocessor
-
-    def _predict(self, X):
-        X = self.preprocessor.transform(X)
-        return self.net_(torch.from_numpy(X.todense())
-                              .to('cuda', torch.float))
 
     def _set_net(self, X):
         self.n_features_ = self.preprocessor.transform(X[0:1, :]).todense()\
@@ -37,7 +49,7 @@ class MLPRegressor(BaseEstimator, RegressorMixin, MetaEstimatorMixin):
         self.optimizer_ = optim.Adam(self.net_.parameters())
         self.criterion_ = nn.MSELoss()
 
-    def partial_fit(self,  X, y):
+    def partial_fit(self, X, y):
         if not hasattr(self, 'net_'):
             self._set_net(X)
 
@@ -47,11 +59,15 @@ class MLPRegressor(BaseEstimator, RegressorMixin, MetaEstimatorMixin):
         epoch_id = self.n_epochs_fit_ + 1
 
         acc_loss = 0.0
-        for i in range(0, X.shape[0], self.batch_size):
+        dataset = PreprocessedDataset(X, y, preprocessor=self.preprocessor)
+        loader = DataLoader(dataset, batch_size=self.batch_size,
+                            pin_memory=True,
+                            num_workers=10)
+        for inp, target in loader:
+            inp = inp.to('cuda', torch.float, non_blocking=True)
+            target = target.to('cuda', torch.float, non_blocking=True)
             self.optimizer_.zero_grad()
-            output = self._predict(X[i:i + self.batch_size])
-            target = torch.from_numpy(y[i:i + self.batch_size])\
-                          .to('cuda', torch.float)
+            output = self.net_(inp)
             loss = self.criterion_(output, target)
             acc_loss = acc_loss + loss.item()
             loss.backward()
@@ -67,4 +83,6 @@ class MLPRegressor(BaseEstimator, RegressorMixin, MetaEstimatorMixin):
         return self
 
     def predict(self, X):
+        X = self.preprocessor.transform(X)
+        X = torch.from_numpy(X.todense()).to('cuda', torch.float)
         return self._predict(X).to('cpu').detach().numpy().reshape(-1)
