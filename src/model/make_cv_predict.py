@@ -13,7 +13,17 @@ if __name__ == '__main__':
     train_set = pd.read_parquet(sys.argv[2])
     output_path = sys.argv[3]
 
-    cv_splits = tscv.split(train_set['date_block_num'], n=8, window=16)
+    num_months = len(train_set['date_block_num'].unique())
+
+    if num_months < 10:
+        n_splits = 1
+        window = num_months - 1
+    else:
+        n_splits = 8
+        window = min(16, num_months - 1)
+
+    cv_splits = tscv.split(train_set['date_block_num'], n=n_splits,
+                           window=window)
     reg = joblib.load(reg_path)
 
     X, y = df_to_X_y(train_set)

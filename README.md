@@ -108,5 +108,5 @@ After that I used this to train the estimator on the second layer. For validatio
 
 | ID | Layer 0 IDs | Meta Estimator | Validation Score | Public LB Score |
 | -- | -- | -- | -- |
-| 0 | 004, 006 | SGD | __0.77996__ | __0.91197__ |
+| 0 | 004, 005, 006 | SGD | __0.77363__ | __0.91093__ |
 | 1 | 004, 006 | XGB (small) | 0.78051 | 0.91361 |

@@ -21,7 +21,8 @@ class ClippedOutputRegressor(BaseEstimator, MetaEstimatorMixin,
         return np.clip(self.regressor_.fit_predict(*args, **kwargs), 0, 20)
 
 
-# Since I already have the categories I don't need the fit capabilities of the regular onehotencoder
+# Since I already have the categories I don't need the fit capabilities of the
+# regular onehotencoder
 class StaticOneHotEncoder(BaseEstimator, TransformerMixin):
     def __init__(self, categories, cat_indexes, num_indexes):
         self.categories = categories

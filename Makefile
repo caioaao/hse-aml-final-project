@@ -216,6 +216,9 @@ all-submissions: .data/submissions/xgb-features-025.csv .data/submissions/sgd-fe
 .data/model-outputs/preds-sgd-features-%.parquet: src/model/make_preds.py .data/model/sgd-features-%.model .data/processed/test-set-features-%.parquet | .data/model-outputs
 	pipenv run scripts/runpy.sh $^ $@
 
+.data/model-outputs/preds-mlp-features-%.parquet: src/model/make_preds.py .data/model/mlp-features-%.model .data/processed/test-set-features-%.parquet | .data/model-outputs
+	pipenv run scripts/runpy.sh $^ $@
+
 ###############################################################################
 # Stacking
 ###############################################################################
