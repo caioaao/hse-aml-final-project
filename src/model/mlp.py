@@ -70,15 +70,16 @@ class FastTensorDataLoader:
 
 
 class MLPRegressor(BaseEstimator, RegressorMixin, MetaEstimatorMixin):
-    def __init__(self, n_epochs=100, batch_size=128):
+    def __init__(self, lr=1e-14, n_epochs=100, batch_size=128):
         self.n_epochs = n_epochs
         self.batch_size = batch_size
+        self.lr = lr
 
     def _set_net(self, X):
         self.n_features_ = X.todense().shape[1]
         self.net_ = MLP(self.n_features_).to('cuda')
         self.n_epochs_fit_ = 0
-        self.optimizer_ = optim.Adam(self.net_.parameters())
+        self.optimizer_ = optim.Adam(self.net_.parameters(), lr=self.lr)
         self.criterion_ = nn.MSELoss()
 
     def partial_fit(self, X, y):

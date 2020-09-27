@@ -14,6 +14,7 @@ from .early_stopping import early_stopping_fit
 
 
 BATCH_SIZE = 1024
+LR = 1e-5
 
 
 def optimize_n_epochs(train_set_path, preprocessor):
@@ -28,7 +29,8 @@ def optimize_n_epochs(train_set_path, preprocessor):
     X_val = preprocessor.transform(X_val)
 
     print('Finding optimal number of epochs')
-    _, n_epochs = early_stopping_fit(MLPRegressor(batch_size=BATCH_SIZE),
+    _, n_epochs = early_stopping_fit(MLPRegressor(batch_size=BATCH_SIZE,
+                                                  lr=LR),
                                      X_train, y_train, X_val, y_val,
                                      max_iter=50)
 
@@ -55,7 +57,8 @@ if __name__ == '__main__':
                              preprocessor.transform(X[1000000:, :])])
 
     print('Building final estimator')
-    mlp = MLPRegressor(n_epochs=n_epochs, batch_size=BATCH_SIZE)
+    mlp = MLPRegressor(n_epochs=n_epochs, batch_size=BATCH_SIZE,
+                       lr=LR)
 
     print('Fitting final estimator')
     mlp.fit(X, y)

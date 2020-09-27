@@ -89,6 +89,8 @@ Used with Optuna for HPO. Optuna's LGBM integration was great since it implement
 
 I really wanted a quick win here, so I just used [this rules of thumb](https://towardsdatascience.com/17-rules-of-thumb-for-building-a-neural-network-93356f9930af) to get a decent score. The preprocessor is the same as SGD.
 
+I didn't do much HPO, just used early stopping for finding a good number of epochs and tuned the initial learning rate for the ADAM optimizer to have a nice learning curve.
+
 ## Experiments
 
 We define an experiment as a feature-set + an algorithm. Their evaluation are the validation score and the public LB score (also our generalization score). Since our amount of submissions is limited I didn't send every result to the competition and used my validation score to choose the ones I submitted.
