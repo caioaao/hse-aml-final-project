@@ -3,6 +3,7 @@ import sys
 from sklearn.linear_model import SGDRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.pipeline import Pipeline
+import scipy.sparse
 
 import optuna
 import pandas as pd
@@ -137,7 +138,8 @@ if __name__ == '__main__':
 
     X, y = df_to_X_y(pd.read_parquet(train_set_path))
 
-    X = preprocessor.fit_transform(X)
+    X = scipy.sparse.vstack([preprocessor.transform(X[:1000000, :]),
+                             preprocessor.transform(X[1000000:, :])])
 
     print('Fitting final estimator')
     sgd.fit(X, y)
