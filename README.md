@@ -100,7 +100,7 @@ We define an experiment as a feature-set + an algorithm. Their evaluation are th
 | 000 | XGB | 000 | 1.04264 |  |
 | 004 | XGB | 025 | __0.79191__ | __0.91197__ |
 | 006 | LGB | 025 | 0.79357 | 0.91941 |
-| 006 | MLP | 025 | 0.86409 |  |
+| 007 | MLP | 025 | 0.84572 |  |
 
 ## Stacking
 
@@ -110,5 +110,5 @@ After that I used this to train the estimator on the second layer. For validatio
 
 | ID | Layer 0 IDs | Meta Estimator | Validation Score | Public LB Score |
 | -- | -- | -- | -- |
-| 0 | 004, 005, 006 | SGD | __0.77363__ | __0.91093__ |
-| 1 | 004, 006 | XGB (small) | 0.78051 | 0.91361 |
+| 0 | 004, 006, 007 | SGD | __0.77110__ | __0.91199__ |
+| 1 | 004, 006, 007 | XGB (small) | 0.78051 | 0.91361 |
