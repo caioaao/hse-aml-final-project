@@ -27,18 +27,21 @@ class FastTensorDataLoader:
     Source: https://discuss.pytorch.org/t/dataloader-much-slower-than-manual-batching/27014/6
     """
 
-    def __init__(self, dataset, batch_size=32, shuffle=False):
+    def __init__(self, *tensors, batch_size=32, shuffle=False):
         """
         Initialize a FastTensorDataLoader.
+
         :param *tensors: tensors to store. Must have the same length @ dim 0.
         :param batch_size: batch size to load.
         :param shuffle: if True, shuffle the data *in-place* whenever an
             iterator is created out of this object.
+
         :returns: A FastTensorDataLoader.
         """
-        self.dataset = dataset
+        assert all(t.shape[0] == tensors[0].shape[0] for t in tensors)
+        self.tensors = tensors
 
-        self.dataset_len = len(self.dataset)
+        self.dataset_len = self.tensors[0].shape[0]
         self.batch_size = batch_size
         self.shuffle = shuffle
 
@@ -50,17 +53,15 @@ class FastTensorDataLoader:
 
     def __iter__(self):
         if self.shuffle:
-            self.indexes = np.random.permutation(self.dataset_len)
-        else:
-            self.indexes = np.arange(self.dataset_len)
+            r = torch.randperm(self.dataset_len)
+            self.tensors = [t[r] for t in self.tensors]
         self.i = 0
         return self
 
     def __next__(self):
         if self.i >= self.dataset_len:
             raise StopIteration
-        batch_inds = self.indexes[self.i:self.i+self.batch_size]
-        batch = self.dataset[batch_inds]
+        batch = tuple(t[self.i:self.i+self.batch_size] for t in self.tensors)
         self.i += self.batch_size
         return batch
 
@@ -68,30 +69,13 @@ class FastTensorDataLoader:
         return self.n_batches
 
 
-class PreprocessedDataset(torch.utils.data.Dataset):
-    def __init__(self, X, y, preprocessor=None):
-        self.X = X
-        self.y = y
-        self.preprocessor = preprocessor
-
-    def __getitem__(self, index):
-        Xt = self.preprocessor.transform(self.X[index, :]).todense()
-        yt = self.y[index]
-        return torch.from_numpy(Xt), torch.from_numpy(yt)
-
-    def __len__(self):
-        return self.X.shape[0]
-
-
 class MLPRegressor(BaseEstimator, RegressorMixin, MetaEstimatorMixin):
-    def __init__(self, preprocessor=None, n_epochs=2, batch_size=128):
+    def __init__(self, n_epochs=100, batch_size=128):
         self.n_epochs = n_epochs
         self.batch_size = batch_size
-        self.preprocessor = preprocessor
 
     def _set_net(self, X):
-        self.n_features_ = self.preprocessor.transform(X[0:1, :]).todense()\
-                                                                 .shape[1]
+        self.n_features_ = X.todense().shape[1]
         self.net_ = MLP(self.n_features_).to('cuda')
         self.n_epochs_fit_ = 0
         self.optimizer_ = optim.Adam(self.net_.parameters())
@@ -107,12 +91,15 @@ class MLPRegressor(BaseEstimator, RegressorMixin, MetaEstimatorMixin):
         epoch_id = self.n_epochs_fit_ + 1
 
         acc_loss = 0.0
-        dataset = PreprocessedDataset(X, y, preprocessor=self.preprocessor)
+        xtensor, ytensor = (torch.from_numpy(X.todense())
+                                 .to('cuda', torch.float,
+                                     non_blocking=True),
+                            torch.from_numpy(y).to('cuda', torch.float,
+                                                   non_blocking=True))
+
         loader = FastTensorDataLoader(
-            dataset, batch_size=self.batch_size)
+            xtensor, ytensor, batch_size=self.batch_size)
         for inp, target in loader:
-            inp = inp.to('cuda', torch.float, non_blocking=True)
-            target = target.to('cuda', torch.float, non_blocking=True)
             self.optimizer_.zero_grad()
             output = self.net_(inp)
             loss = self.criterion_(output, target)
@@ -130,6 +117,5 @@ class MLPRegressor(BaseEstimator, RegressorMixin, MetaEstimatorMixin):
         return self
 
     def predict(self, X):
-        X = self.preprocessor.transform(X)
         X = torch.from_numpy(X.todense()).to('cuda', torch.float)
-        return self._predict(X).to('cpu').detach().numpy().reshape(-1)
+        return self.net_(X).to('cpu').detach().numpy().reshape(-1)

@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 from sklearn.metrics import mean_squared_error
 
@@ -12,9 +14,12 @@ def early_stopping_fit(
     best_loss = np.inf
     last_visible_improvement = 1
     for iter_n in range(max_iter):
+        t0 = time.time()
         reg.partial_fit(X_train, y_train)
+        tf = time.time()
         intermediate_value = _clipped_rmse(y_val, reg.predict(X_val))
-        print(' iter %2d | val-rmse %8.5f' % (iter_n, intermediate_value))
+        print(' iter %2d | val-rmse %8.5f (%6.3f secs)'
+              % (iter_n, intermediate_value, tf - t0))
         if callback:
             callback(reg, iter_n, intermediate_value)
         if best_loss > intermediate_value + tol:
